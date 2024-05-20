@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:myapp/feature/auntification/login/viewmodel/login_view_model.dart';
 import 'package:myapp/feature/auntification/sign/sign.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:myapp/feature/course/screens/dashboard_screen.dart';
 
-// ignore: must_be_immutable
 class Login extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -189,16 +189,28 @@ class Login extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              const SizedBox(height: 40),
               ElevatedButton(
-                onPressed: () {
-                  viewModel.registerPressed(
-                    context,
-                    nameController.text.trim(),
-                    emailController.text.trim(),
-                    passwordController.text.trim(),
-                    _image,
-                  );
+                onPressed: () async {
+                  try {
+                    // Здесь выполняем логику регистрации
+                    // await viewModel.register(
+                    //   name: nameController.text.trim(),
+                    //   email: emailController.text.trim(),
+                    //   password: passwordController.text.trim(),
+                    //   image: _image,
+                    // );
+
+                    // Переход на следующий экран после успешной регистрации
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const DashboardScreen()),
+                    );
+                  } catch (e) {
+                    // Обработка ошибок регистрации
+                    print('Ошибка регистрации: $e');
+                    // Дополнительно можно показать сообщение пользователю
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1E1E1E),

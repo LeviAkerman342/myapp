@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/feature/onbourding/onboarding_screen.dart';
+import 'package:myapp/feature/course/screens/dashboard_screen.dart';
+import 'package:myapp/router/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -17,8 +18,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Onboarding(),
+    return MaterialApp.router(
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
+      builder: (context, child) {
+        return const DashboardScreen();
+      },
     );
   }
 }

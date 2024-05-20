@@ -1,10 +1,10 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/core/data/model/course.dart';
-import 'package:myapp/core/services/udemy_api_service.dart';
-
+import 'package:myapp/core/data/model/local_api.dart';
+import 'package:myapp/feature/course/widgets/calendar/calendar.dart';
+import 'package:myapp/feature/course/widgets/documentation/documentation.dart';
+import 'package:myapp/feature/payment/payment.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final Course course;
@@ -21,6 +21,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
 
   bool _isFavorite = false;
   double _userRating = 0.0;
+  final TextEditingController _reviewController = TextEditingController();
 
   @override
   void initState() {
@@ -39,32 +40,62 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.course.name),
-      ),
-      body: FutureBuilder<Course>(
-        future: _fetchCourseDetails(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError || snapshot.data == null) {
-            return _buildErrorWidget();
-          } else {
-            final Course? courseDetails = snapshot.data;
-            if (courseDetails != null) {
-              return _buildCourseDetails(courseDetails);
-            } else {
-              return _buildErrorWidget();
-            }
-          }
-        },
-      ),
+    return FutureBuilder<Course>(
+      future: StepikApiService().fetchCourseDetails(widget.course.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError || snapshot.data == null) {
+          return _buildErrorWidget();
+        } else {
+          final Course courseDetails = snapshot.data!;
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              title: Text(courseDetails.name),
+            ),
+            body: ListView(
+              children: [
+                _buildCourseDetails(courseDetails),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                if (courseDetails.isFree) {
+                  _navigateToDocumentation(context);
+                } else {
+                  _showRatingConfirmation(context, courseDetails.id);
+                }
+              },
+              child: courseDetails.isFree
+                  ? const Icon(Icons.file_copy)
+                  : const Icon(Icons.shopping_cart),
+            ),
+          );
+        }
+      },
     );
   }
 
+  void _showRatingConfirmation(BuildContext context, int id) async {
+    if (_userRating > 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Спасибо за ваш отзыв!'),
+        ),
+      );
+    } else {
+      if (widget.course.isFree) {
+        _navigateToDocumentation(context); // Pass the context here
+      } else {
+        _enrollInCourse();
+      }
+    }
+  }
+
   Widget _buildCourseDetails(Course courseDetails) {
-    return SingleChildScrollView(
+    return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,24 +154,34 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
                 ),
               ),
               IconButton(
-                onPressed: () {
-                  _toggleFavorite();
-                },
-                icon: AnimatedIcon(
-                  icon: AnimatedIcons.add_event,
-                  progress: _animationController,
-                  color: _isFavorite ? Colors.pink : Colors.grey,
+                onPressed: _toggleFavorite,
+                icon: Icon(
+                  _isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: _isFavorite ? Colors.red : Colors.grey,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 20),
-          Text(
-            'Продолжительность курса: ${courseDetails.duration}',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: _openCalendar,
+                child: Row(
+                  children: [
+                    const Icon(Icons.calendar_today),
+                    const SizedBox(width: 5),
+                    Text(
+                      'Продолжительность курса: \n${courseDetails.duration}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 20),
           Row(
@@ -174,13 +215,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
           ),
           const SizedBox(height: 5),
           TextButton(
-            onPressed: () {
-              // Add logic for navigating to documentation
-            },
+            onPressed: () => _navigateToDocumentation(context),
             child: const Text('Перейти'),
           ),
           const SizedBox(height: 20),
-          _buildReviewsSlider(),
+          _buildReviewsSection(),
         ],
       ),
     );
@@ -189,31 +228,71 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
   Widget _buildStarRating() {
     return Row(
       children: List.generate(
-        5,
+        4,
         (index) => IconButton(
           onPressed: () {
             _setRating(index + 1);
-            _animationController.reset();
-            _animationController.forward();
           },
           icon: Icon(
-            index < _userRating.floor() ? Icons.star : Icons.star_border,
-            color: Colors.amber,
+            index < _userRating ? Icons.star : Icons.star_border,
+            color: index < _userRating ? Colors.amber : Colors.grey,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildReviewsSlider() {
-    // This is a placeholder for the reviews slider
+  void _setRating(double rating) {
+    setState(() {
+      _userRating = rating;
+    });
+
+    // Показать уведомление после установки рейтинга
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: Color.fromARGB(255, 116, 114, 114),
+        content: Text(
+          'Спасибо за ваш отзыв!',
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReviewsSection() {
+    // Список имён для имитации реальных отзывов
+    List<String> names = ['Александр', 'Елена', 'Михаил', 'Анна', 'Иван'];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        const Text(
+          'Отзывы:',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        _buildReviewsSlider(names),
+        const SizedBox(height: 20),
+        _buildUserReview(),
+      ],
+    );
+  }
+
+  Widget _buildReviewsSlider(List<String> names) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: List.generate(
           5,
           (index) {
+            // Случайный выбор имени
+            String name = names[index % names.length];
             return Card(
+              color: Colors.white, // Задний фон белый
               margin: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Container(
                 width: 200,
@@ -221,18 +300,26 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    CircleAvatar(
+                      backgroundColor: const Color.fromARGB(255, 172, 175, 177),
+                      child: Text(
+                        name[0],
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
                     Text(
-                      'Отзыв ${index + 1}',
+                      '$name',
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     const Text(
                       'Очень полезный курс! Рекомендую!',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                   ],
@@ -242,6 +329,41 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildUserReview() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Оставить отзыв:',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
+        TextField(
+          controller: _reviewController,
+          decoration: const InputDecoration(
+            hintText: 'Введите ваш отзыв',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: () {
+            _submitReview(_reviewController.text);
+          },
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white, // Чёрный цвет текста
+            side: const BorderSide(color: Colors.black), // Чёрная обводка
+          ),
+          child: const Text('Отправить'),
+        ),
+      ],
     );
   }
 
@@ -257,37 +379,61 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
     );
   }
 
-  Future<Course> _fetchCourseDetails() async {
-    try {
-      final apiService = StepikApiService();
-      final apiCourse = await apiService.fetchCourseDetails(widget.course.id);
-      return apiCourse;
-    } catch (e) {
-      return widget.course;
-    }
-  }
-
   void _toggleFavorite() {
     setState(() {
       _isFavorite = !_isFavorite;
     });
-    // Add logic for updating favorite status on backend
+
+    print('Toggling favorite status for course ${widget.course.id}');
   }
 
-  void _setRating(double rating) async {
-    setState(() {
-      _userRating = rating;
-    });
-    try {
-      final apiService = StepikApiService();
-      await apiService.updateCourseRating(widget.course.id, rating);
-      // Handle success
-    } catch (e) {
-      // Handle error
-      setState(() {
-        // Revert rating if update fails
-        _userRating = 0.0;
-      });
-    }
+  void _enrollInCourse() {
+    _openPaymentScreen();
+    print('Enrolling user in the course ${widget.course.id}');
+  }
+
+  void _navigateToDocumentation(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CourseReadingScreen(
+          courseId: 1,
+        ),
+      ),
+    );
+  }
+
+  void _openPaymentScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PaymentScreen()),
+    );
+  }
+
+  void _openCalendar() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CalendarScreen(
+          startDate: DateTime.now(),
+          courseDuration: 30,
+        ),
+      ),
+    );
+  }
+
+  void _submitReview(String review) {
+    // Отправить отзыв на сервер
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.white, // Задний фон белый
+        content: Text(
+          'Отзыв отправлен: $review',
+          style: const TextStyle(
+              color: Colors.black), // Текст чёрного цвета для контраста
+        ),
+      ),
+    );
+    _reviewController.clear();
   }
 }

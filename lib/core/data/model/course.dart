@@ -44,6 +44,9 @@ class Course {
   /// Стоимость курса
   final double courseCost;
 
+  /// Список тегов курса
+  final List<String> tags;
+
   Course({
     required this.id,
     required this.imageUrl,
@@ -60,6 +63,7 @@ class Course {
     required this.difficultyLevel,
     required this.duration,
     required this.courseCost,
+    required this.tags, // Добавлен список тегов курса
   });
 
   /// Фабричный метод для создания экземпляра курса из JSON
@@ -79,6 +83,9 @@ class Course {
       difficultyLevel: json['difficultyLevel'], // Уровень сложности курса
       duration: json['duration'], // Продолжительность курса
       courseCost: json['courseCost'] ?? 0.0, // Стоимость курса
+      tags: json['tags'] != null
+          ? List<String>.from(json['tags'])
+          : [], // Список тегов курса
     );
   }
 }

@@ -3,13 +3,13 @@ import 'package:line_icons/line_icons.dart';
 
 class ProfileMenuWidget extends StatelessWidget {
   const ProfileMenuWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.onPress,
     this.endIcon = true,
     this.textColor,
-  }) : super(key: key);
+  });
 
   final String title;
   final IconData icon;
@@ -31,8 +31,10 @@ class ProfileMenuWidget extends StatelessWidget {
         child: Icon(icon, color: Colors.black),
       ),
       title: Text(title,
-          style:
-              Theme.of(context).textTheme.bodyLarge?.apply(color: textColor)),
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge
+              ?.apply(color: textColor)), // Исправил применение стиля
       trailing: endIcon
           ? Container(
               width: 30,

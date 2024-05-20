@@ -2,25 +2,24 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-
 class NavBar extends StatelessWidget {
   final IconData userIcon;
   final String userName;
   final IconData notificationIcon;
-  final File? userImage; // Добавлено новое поле для изображения пользователя
+  final File? userImage;
 
   const NavBar({
-    super.key, // Добавлено, чтобы не было ошибки супер-конструктора
+    super.key,
     required this.userIcon,
     required this.userName,
     required this.notificationIcon,
-    this.userImage, // Инициализируем поле изображения пользователя
-  }); // Вызываем супер-конструктор
+    this.userImage, required Color backgroundColor, required Color textColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: SizedBox(
         height: 50,
         child: Padding(
@@ -30,7 +29,6 @@ class NavBar extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  // Если есть изображение пользователя, отобразим его
                   if (userImage != null)
                     CircleAvatar(
                       backgroundImage: FileImage(userImage!),
@@ -39,23 +37,18 @@ class NavBar extends StatelessWidget {
                   const SizedBox(width: 10),
                   Text(
                     userName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Color(0xffab93e0),
-                      fontFamily: 'Oddval-SemiBold',
-                      fontWeight: FontWeight.normal,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
               ),
               GestureDetector(
                 onTap: () {
-                  // Действие при нажатии на иконку уведомлений
+                  // Action when notification icon is tapped
                 },
                 child: Icon(
                   notificationIcon,
                   size: 24,
-                  color: Colors.black,
+                  color: Theme.of(context).iconTheme.color,
                 ),
               ),
             ],
