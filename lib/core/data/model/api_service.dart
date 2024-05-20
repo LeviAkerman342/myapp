@@ -3,9 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:myapp/core/data/model/course.dart';
 import 'package:myapp/feature/auntification/I_authentication_repository.dart';
 
-class AuthenticationRepository implements IAuthenticationRepository{
-  final String baseUrl =
-      'https://learning-courses-back-end.onrender.com/api/v1';
+class AuthenticationRepository implements IAuthenticationRepository {
+  final String baseUrl = 'https://learning-courses-back-end.onrender.com/api/v1';
 
   @override
   Future<void> registerUser({
@@ -15,32 +14,25 @@ class AuthenticationRepository implements IAuthenticationRepository{
     required String password,
     required String numberPhone,
   }) async {
-    final String registrationUrl = '$baseUrl/Authentication/User/Registration';
-
-    final Map<String, dynamic> requestData = {
+    final Uri url = Uri.parse('$baseUrl/Authentication/User/Registration');
+    final Map<String, String> headers = {'Content-Type': 'application/json'};
+    final body = jsonEncode({
       'userName': userName,
       'email': email,
       'fullName': fullName,
       'password': password,
       'numberPhone': numberPhone,
-    };
+    });
 
-    final jsonData = json.encode(requestData);
+    final response = await http.post(url, headers: headers, body: body);
 
-    try {
-      final response = await http.post(
-        Uri.parse(registrationUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonData,
-      );
-
-      if (response.statusCode == 200) {
-        print('Пользователь успешно зарегистрирован');
-      } else {
-        print('Ошибка при регистрации: ${response.body}');
-      }
-    } catch (e) {
-      print('Ошибка при соединении с сервером: $e');
+    if (response.statusCode == 200) {
+      // Registration successful
+      print('Registration successful');
+      print(response.body); // Вывод ответа сервера
+    } else {
+      // Registration failed
+      print('Registration failed: ${response.body}');
     }
   }
 
@@ -62,6 +54,21 @@ class AuthenticationRepository implements IAuthenticationRepository{
       }
     } catch (e) {
       throw Exception('Ошибка при соединении с сервером: $e');
+    }
+  }
+
+  Future<void> authenticateUser(String emailOrName, String password) async {
+    final Uri url = Uri.parse('$baseUrl/Authentication/User?EmailOrName=$emailOrName&Password=$password');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      // Authentication successful
+      print('Authentication successful');
+      print(response.body); // Вывод ответа сервера
+    } else {
+      // Authentication failed
+      print('Authentication failed: ${response.body}');
     }
   }
 }

@@ -1,29 +1,40 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:myapp/feature/auntification/login/viewmodel/login_view_model.dart';
-import 'package:myapp/feature/auntification/sign/sign.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myapp/feature/course/screens/dashboard_screen.dart';
+import 'package:myapp/core/data/model/api_service.dart';
+import 'package:myapp/feature/auntification/login/viewmodel/login_view_model.dart';
+import 'package:myapp/feature/profile/profile.dart';
+import 'package:myapp/router/domain/model_router.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  final LoginViewModel viewModel;
+  final AuthenticationRepository authenticationRepository; // Добавьте поле для хранения экземпляра AuthenticationRepository
+
+  const Login({
+    Key? key,
+    required this.viewModel,
+    required this.authenticationRepository, // Инициализируйте поле в конструкторе
+  }) : super(key: key);
+
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   File? _image;
-
-  final LoginViewModel viewModel;
-
-  Login({
-    super.key,
-    required this.viewModel,
-  });
 
   Future<void> _getImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
-      _image = File(image.path);
+      setState(() {
+        _image = File(image.path);
+      });
     }
   }
 
@@ -54,98 +65,24 @@ class Login extends StatelessWidget {
                 height: 269,
               ),
               const SizedBox(height: 20),
-              Container(
-                width: 282,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black),
-                ),
-                child: TextField(
-                  controller: nameController,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                    hintText: 'Имя Фамилия',
-                    hintStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
+              buildTextField(
+                controller: nameController,
+                hintText: 'Имя Фамилия',
               ),
               const SizedBox(height: 20),
-              Container(
-                width: 282,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black),
-                ),
-                child: TextField(
-                  controller: emailController,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                    hintText: 'Почта',
-                    hintStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
+              buildTextField(
+                controller: emailController,
+                hintText: 'Почта',
               ),
               const SizedBox(height: 20),
-              Container(
-                width: 282,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black),
-                ),
-                child: TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                    hintText: 'Пароль',
-                    hintStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
+              buildTextField(
+                controller: passwordController,
+                hintText: 'Пароль',
+                obscureText: true,
               ),
               const SizedBox(height: 20),
               GestureDetector(
-                onTap: () async {
-                  await _getImage();
-                  if (_image != null) {
-                    print('Фото выбрано: ${_image!.path}');
-                  }
-                },
+                onTap: _getImage,
                 child: Container(
                   width: 282,
                   height: 40,
@@ -154,29 +91,9 @@ class Login extends StatelessWidget {
                     color: Colors.white,
                     border: Border.all(color: Colors.black),
                   ),
-                  child: Stack(
+                  child: const Stack(
                     children: [
-                      Container(
-                        width: 67,
-                        height: 26,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2),
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Stack(
-                        children: [
-                          SizedBox(
-                            width: 20,
-                            height: 18.000001907348633,
-                          ),
-                          SizedBox(
-                            width: 8,
-                            height: 8.000000953674316,
-                          ),
-                        ],
-                      ),
-                      const Positioned(
+                      Positioned(
                         left: 8,
                         top: 6,
                         child: Icon(
@@ -192,24 +109,17 @@ class Login extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    // Здесь выполняем логику регистрации
-                    // await viewModel.register(
-                    //   name: nameController.text.trim(),
-                    //   email: emailController.text.trim(),
-                    //   password: passwordController.text.trim(),
-                    //   image: _image,
-                    // );
-
-                    // Переход на следующий экран после успешной регистрации
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const DashboardScreen()),
+                    final userProfile = UserProfile(
+                      displayName: nameController.text.trim(),
+                      email: emailController.text.trim(),
+                      photoUrl: _image?.path ?? '',
+                    );
+                    context.go(
+                      SkillWaveRouter.profile,
+                      extra: userProfile,
                     );
                   } catch (e) {
-                    // Обработка ошибок регистрации
-                    print('Ошибка регистрации: $e');
-                    // Дополнительно можно показать сообщение пользователю
+                    print('Registration error: $e');
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -235,11 +145,24 @@ class Login extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignUp()),
-                  );
+                onPressed: () async {
+                  try {
+                    // Вызов метода регистрации через AuthenticationRepository
+                    await widget.authenticationRepository.registerUser(
+                      userName: nameController.text.trim(),
+                      email: emailController.text.trim(),
+                      fullName:
+                          '', // Здесь должно быть поле для полного имени пользователя
+                      password: passwordController.text.trim(),
+                      numberPhone:
+                          '', // Здесь должно быть поле для номера телефона пользователя
+                    );
+
+                    // Переход на экран регистрации
+                    context.go(SkillWaveRouter.signup);
+                  } catch (e) {
+                    print('Registration error: $e');
+                  }
                 },
                 child: const Text(
                   'Уже есть аккаунт? Войти',
@@ -251,6 +174,41 @@ class Login extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    bool obscureText = false,
+  }) {
+    return Container(
+      width: 282,
+      height: 40,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: Colors.white,
+        border: Border.all(color: Colors.black),
+      ),
+      child: TextField(
+        controller: controller,
+        obscureText: obscureText,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 15,
+          fontWeight: FontWeight.w700,
+        ),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            color: Colors.black,
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),

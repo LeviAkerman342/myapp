@@ -4,4 +4,5 @@ abstract class SkillWaveRouter {
   static const profile = '/profile';
   static const search = '/search';
   static const favorites = '/favorites';
+  static const signup = '/sign';
 }

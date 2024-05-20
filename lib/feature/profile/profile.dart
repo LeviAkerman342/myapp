@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:myapp/feature/profile/update_profile/update_profile.dart';
-import 'package:myapp/feature/profile/profile_menu.dart'; // Импорт меню
+import 'dart:io';
 
-// Пример класса для хранения данных о пользователе
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:myapp/feature/profile/profile_menu.dart';
+import 'package:myapp/router/domain/model_router.dart';
+
 class UserProfile {
   final String displayName;
   final String email;
@@ -17,20 +18,24 @@ class UserProfile {
 }
 
 class ProfileScreen extends StatelessWidget {
-  // Пример данных о пользователе
-  final userProfile = UserProfile(
-    displayName: "Никита Мошой",
-    email: "john.doe@example.com",
-    photoUrl: "https://example.com/profile.jpg",
-  );
+  final UserProfile userProfile;
 
-  ProfileScreen({super.key});
+  ProfileScreen({
+    Key? key,
+    required this.userProfile,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            context.go(SkillWaveRouter.dashboard);
+          },
+        ),
         title: const Text(
           'Профиль',
           style: TextStyle(color: Colors.black),
@@ -41,21 +46,22 @@ class ProfileScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.black),
             onPressed: () {
-              // Добавьте здесь код выхода из системы
-              Get.offAllNamed('/login');
+              context.go(SkillWaveRouter.onboarding);
             },
           ),
         ],
       ),
       body: SingleChildScrollView(
-        // Обернул в SingleChildScrollView для прокрутки, если контент не помещается на экране
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 20), // Добавил небольшой отступ сверху
+            const SizedBox(height: 20),
             CircleAvatar(
               radius: 60,
-              backgroundImage: NetworkImage(userProfile.photoUrl),
+              backgroundImage: userProfile.photoUrl.isNotEmpty
+                  ? FileImage(File(userProfile.photoUrl))
+                  : const AssetImage('https://sun9-41.userapi.com/impg/w5a02deF_8VA1cYX9zUHEeQ-3rXkvHeqMY4vdQ/snNPB8fj0pg.jpg?size=736x736&quality=95&sign=4c9251caca6dccd708cb05c6e43d527c&type=album'),
+              backgroundColor: Colors.grey[200],
             ),
             const SizedBox(height: 16),
             Text(
@@ -77,16 +83,15 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             ProfileMenuWidget(
-              title:
-                  'Редактировать профиль', // Использование вашего меню для редактирования профиля
+              title: 'Редактировать профиль',
               icon: Icons.edit,
-              onPress: () => Get.to(() => const UpdateProfileScreen()),
+              onPress: () => context.push('/update-profile'), // Update this route if necessary
             ),
             ProfileMenuWidget(
-              title: 'Другие опции', // Пример другого пункта меню
+              title: 'Другие опции',
               icon: Icons.more_vert,
               onPress: () {
-                // Добавьте обработчик события
+                // Add event handler
               },
             ),
           ],

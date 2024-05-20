@@ -15,8 +15,7 @@ class CourseDetailScreen extends StatefulWidget {
   _CourseDetailScreenState createState() => _CourseDetailScreenState();
 }
 
-class _CourseDetailScreenState extends State<CourseDetailScreen>
-    with SingleTickerProviderStateMixin {
+class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   bool _isFavorite = false;
@@ -46,7 +45,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError || snapshot.data == null) {
-          return _buildErrorWidget();
+          return _buildFallbackContent();
         } else {
           final Course courseDetails = snapshot.data!;
           return Scaffold(
@@ -68,9 +67,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
                   _showRatingConfirmation(context, courseDetails.id);
                 }
               },
-              child: courseDetails.isFree
-                  ? const Icon(Icons.file_copy)
-                  : const Icon(Icons.shopping_cart),
+              child: courseDetails.isFree ? const Icon(Icons.file_copy) : const Icon(Icons.shopping_cart),
             ),
           );
         }
@@ -87,7 +84,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
       );
     } else {
       if (widget.course.isFree) {
-        _navigateToDocumentation(context); // Pass the context here
+        _navigateToDocumentation(context);
       } else {
         _enrollInCourse();
       }
@@ -247,7 +244,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
       _userRating = rating;
     });
 
-    // Показать уведомление после установки рейтинга
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: Color.fromARGB(255, 116, 114, 114),
@@ -260,7 +256,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
   }
 
   Widget _buildReviewsSection() {
-    // Список имён для имитации реальных отзывов
     List<String> names = ['Александр', 'Елена', 'Михаил', 'Анна', 'Иван'];
 
     return Column(
@@ -289,10 +284,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
         children: List.generate(
           5,
           (index) {
-            // Случайный выбор имени
             String name = names[index % names.length];
             return Card(
-              color: Colors.white, // Задний фон белый
+              color: Colors.white,
               margin: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Container(
                 width: 200,
@@ -358,8 +352,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.black,
-            backgroundColor: Colors.white, // Чёрный цвет текста
-            side: const BorderSide(color: Colors.black), // Чёрная обводка
+            backgroundColor: Colors.white,
+            side: const BorderSide(color: Colors.black),
           ),
           child: const Text('Отправить'),
         ),
@@ -367,13 +361,16 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
     );
   }
 
-  Widget _buildErrorWidget() {
-    return const Center(
-      child: Text(
-        'Ошибка загрузки данных о курсе',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+  Widget _buildFallbackContent() {
+    // Предоставить контент по умолчанию
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Детали курса'),
+      ),
+      body: const Center(
+        child: Text(
+          'Не удалось загрузить данные курса. Попробуйте позже.',
+          style: TextStyle(fontSize: 18),
         ),
       ),
     );
@@ -423,14 +420,12 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
   }
 
   void _submitReview(String review) {
-    // Отправить отзыв на сервер
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: Colors.white, // Задний фон белый
+        backgroundColor: Colors.white,
         content: Text(
           'Отзыв отправлен: $review',
-          style: const TextStyle(
-              color: Colors.black), // Текст чёрного цвета для контраста
+          style: const TextStyle(color: Colors.black),
         ),
       ),
     );

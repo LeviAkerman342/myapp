@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/core/bloc/auntification/login_state_block.dart';
+import 'package:myapp/core/data/model/api_service.dart';
 import 'package:myapp/core/data/model/login_with_image.dart';
 import 'package:myapp/feature/auntification/login/presentation/login.dart';
 import 'package:myapp/feature/auntification/login/viewmodel/login_view_model.dart';
 
 class Onboarding extends StatefulWidget {
-  const Onboarding({super.key});
+  final AuthenticationRepository authenticationRepository;
+
+  const Onboarding({super.key, required this.authenticationRepository});
 
   @override
-  // ignore: library_private_types_in_public_api
   _OnboardingState createState() => _OnboardingState();
 }
 
@@ -61,11 +63,12 @@ class _OnboardingState extends State<Onboarding> {
                     'Готов ли ты начать учиться? Вместе мы откроем новые горизонты и обретем новые навыки. Наши курсы разработаны для того, чтобы каждый шаг был увлекательным и образовательным.',
                 isLastPage: true,
               ),
-              Login(
+                Login(
                 viewModel: LoginViewModel(
                   registrationStrategy: RegistrationWithImage(),
                   registrationStateManager: RegistrationStateManager(),
                 ),
+                authenticationRepository: widget.authenticationRepository,
               ),
             ],
           ),
