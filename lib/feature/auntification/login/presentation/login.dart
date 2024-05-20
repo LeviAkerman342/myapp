@@ -60,7 +60,7 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 20),
               Image.asset(
-                '../assets/image/logo_login.png',
+                'https://sun9-3.userapi.com/impg/zn38HQNq0QnVZlAxFyFfpq9U6dvQzm3WSelHLA/YE5kc5MPMGs.jpg?size=291x269&quality=96&sign=b4e9591ca8a1a99f897012b85c74bdaf&type=album',
                 width: 291,
                 height: 269,
               ),

@@ -52,7 +52,7 @@ class SignUp extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Image.asset(
-                '../assets/image/logo_login.png',
+                'https://sun9-25.userapi.com/impg/MJL7a_x4_ayzFjYFvkVG7wvH-1tcdmM3a47kuA/tis83kP7Bsk.jpg?size=291x269&quality=96&sign=b6d47824a7a6876edd0a05f1b8401913&type=album',
                 width: 291,
                 height: 269,
               ),

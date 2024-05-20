@@ -8,8 +8,7 @@ import 'package:myapp/feature/profile/profile.dart';
 import 'package:myapp/feature/search/search_scree.dart';
 import 'package:myapp/router/domain/model_router.dart';
 
-// Assuming you have an instance of AuthenticationRepository
-final authenticationRepository = AuthenticationRepository(); // Replace this with your actual instance
+final authenticationRepository = AuthenticationRepository(); 
 
 final router = GoRouter(
   initialLocation: SkillWaveRouter.onboarding,
