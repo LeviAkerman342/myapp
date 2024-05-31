@@ -8,13 +8,14 @@ class CustomCard extends StatefulWidget {
   final Course course;
   final Color? backgroundColor;
 
-  const CustomCard({Key? key, required this.course, this.backgroundColor}) : super(key: key);
+  const CustomCard({super.key, required this.course, this.backgroundColor});
 
   @override
   _CustomCardState createState() => _CustomCardState();
 }
 
-class _CustomCardState extends State<CustomCard> with SingleTickerProviderStateMixin {
+class _CustomCardState extends State<CustomCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -23,7 +24,7 @@ class _CustomCardState extends State<CustomCard> with SingleTickerProviderStateM
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
@@ -48,7 +49,7 @@ class _CustomCardState extends State<CustomCard> with SingleTickerProviderStateM
         opacity: _animation,
         child: SlideTransition(
           position: Tween<Offset>(
-            begin: Offset(0.0, -0.5),
+            begin: const Offset(0.0, -0.5),
             end: Offset.zero,
           ).animate(_controller),
           child: Card(
@@ -65,7 +66,7 @@ class _CustomCardState extends State<CustomCard> with SingleTickerProviderStateM
                     color: Colors.grey.withOpacity(0.3),
                     spreadRadius: 2,
                     blurRadius: 5,
-                    offset: Offset(0, 3),
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
@@ -180,13 +181,12 @@ class _CustomCardState extends State<CustomCard> with SingleTickerProviderStateM
     return Wrap(
       spacing: 8.0,
       runSpacing: 8.0,
-      children: widget.course.tags?.map((tag) {
+      children: widget.course.tags.map((tag) {
             return CustomChip(
               label: tag,
               icon: Icons.local_offer,
             );
-          }).toList() ??
-          [],
+          }).toList(),
     );
   }
 
@@ -232,7 +232,8 @@ class _CustomCardState extends State<CustomCard> with SingleTickerProviderStateM
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CourseDetailScreen(course: widget.course),
+        builder: (context) => CourseDetailScreen(
+            courseId: widget.course.id, course: widget.course),
       ),
     );
   }

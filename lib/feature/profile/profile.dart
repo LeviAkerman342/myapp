@@ -20,10 +20,10 @@ class UserProfile {
 class ProfileScreen extends StatelessWidget {
   final UserProfile userProfile;
 
-  ProfileScreen({
-    Key? key,
+  const ProfileScreen({
+    super.key,
     required this.userProfile,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class ProfileScreen extends StatelessWidget {
               radius: 60,
               backgroundImage: userProfile.photoUrl.isNotEmpty
                   ? FileImage(File(userProfile.photoUrl))
-                  : const AssetImage('https://sun9-41.userapi.com/impg/w5a02deF_8VA1cYX9zUHEeQ-3rXkvHeqMY4vdQ/snNPB8fj0pg.jpg?size=736x736&quality=95&sign=4c9251caca6dccd708cb05c6e43d527c&type=album'),
+                  : const AssetImage('https://sun9-41.userapi.com/impg/w5a02deF_8VA1cYX9zUHEeQ-3rXkvHeqMY4vdQ/snNPB8fj0pg.jpg?size=736x736&quality=95&sign=4c9251caca6dccd708cb05c6e43d527c&type=album') as ImageProvider,
               backgroundColor: Colors.grey[200],
             ),
             const SizedBox(height: 16),

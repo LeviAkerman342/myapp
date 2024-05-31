@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/core/data/model/course.dart';
-import 'package:myapp/core/data/model/local_api.dart';
+import 'package:myapp/core/services/local_storage/local_storage_curse.dart';
 import 'package:myapp/feature/course/widgets/calendar/calendar.dart';
-import 'package:myapp/feature/course/widgets/documentation/documentation.dart';
+import 'package:myapp/feature/course/widgets/documentation/pages/course_page.dart';
 import 'package:myapp/feature/payment/payment.dart';
 
 class CourseDetailScreen extends StatefulWidget {
-  final Course course;
+  final int courseId;
 
-  const CourseDetailScreen({super.key, required this.course});
+  const CourseDetailScreen(
+      {super.key, required this.courseId, required Course course});
 
   @override
   _CourseDetailScreenState createState() => _CourseDetailScreenState();
 }
 
-class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTickerProviderStateMixin {
+class _CourseDetailScreenState extends State<CourseDetailScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   bool _isFavorite = false;
   double _userRating = 0.0;
   final TextEditingController _reviewController = TextEditingController();
+
+  late Course _course;
 
   @override
   void initState() {
@@ -29,203 +33,188 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+
+    _course = LocalStorageService()
+        .getAllCourses()
+        .firstWhere((course) => course.id == widget.courseId);
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _reviewController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Course>(
-      future: StepikApiService().fetchCourseDetails(widget.course.id),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError || snapshot.data == null) {
-          return _buildFallbackContent();
-        } else {
-          final Course courseDetails = snapshot.data!;
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              title: Text(courseDetails.name),
-            ),
-            body: ListView(
-              children: [
-                _buildCourseDetails(courseDetails),
-              ],
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                if (courseDetails.isFree) {
-                  _navigateToDocumentation(context);
-                } else {
-                  _showRatingConfirmation(context, courseDetails.id);
-                }
-              },
-              child: courseDetails.isFree ? const Icon(Icons.file_copy) : const Icon(Icons.shopping_cart),
-            ),
-          );
-        }
-      },
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        title: Text(_course.name),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          _buildCourseDetails(_course),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (_course.price == 0) {
+            _navigateToDocumentation(context);
+          } else {
+            _navigateToPayment(context);
+          }
+        },
+        child: _course.price == 0
+            ? const Icon(Icons.file_copy)
+            : const Icon(Icons.shopping_cart),
+      ),
     );
   }
 
-  void _showRatingConfirmation(BuildContext context, int id) async {
-    if (_userRating > 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Спасибо за ваш отзыв!'),
-        ),
-      );
-    } else {
-      if (widget.course.isFree) {
-        _navigateToDocumentation(context);
-      } else {
-        _enrollInCourse();
-      }
-    }
-  }
-
   Widget _buildCourseDetails(Course courseDetails) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            courseDetails.name,
-            style: GoogleFonts.nunito(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Image.network(
+          courseDetails.imageUrl ??
+              'https://cdn.stepik.net/media/cache/images/courses/187490/cover_PV6a4Rz/d9657182ee254b31244717f1b2a21313.png',
+          height: 200,
+          width: double.infinity,
+          fit: BoxFit.cover,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          courseDetails.name,
+          style: GoogleFonts.nunito(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 10),
-          const Text(
-            'Описание:',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          'Описание:',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 5),
-          Text(
-            courseDetails.description,
-            style: const TextStyle(
-              fontSize: 16,
-            ),
+        ),
+        const SizedBox(height: 5),
+        Text(
+          courseDetails.description,
+          style: const TextStyle(
+            fontSize: 16,
           ),
-          const SizedBox(height: 20),
-          const Text(
-            'Что вы узнаете:',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          'Что вы узнаете:',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 5),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: (courseDetails.topics ?? []).map<Widget>((topic) {
-              return Text(
-                '- $topic',
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Цена: ${courseDetails.isFree ? 'Бесплатно' : '${courseDetails.price}'}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+        ),
+        const SizedBox(height: 5),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: (courseDetails.topics ?? []).map<Widget>((topic) {
+            return Text(
+              '- $topic',
+              style: const TextStyle(
+                fontSize: 16,
               ),
-              IconButton(
-                onPressed: _toggleFavorite,
-                icon: Icon(
-                  _isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: _isFavorite ? Colors.red : Colors.grey,
-                ),
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Цена: ${courseDetails.price == 0 ? 'Бесплатно' : '\$${courseDetails.price}'}',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              GestureDetector(
-                onTap: _openCalendar,
-                child: Row(
-                  children: [
-                    const Icon(Icons.calendar_today),
-                    const SizedBox(width: 5),
-                    Text(
-                      'Продолжительность курса: \n${courseDetails.duration}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+            ),
+            IconButton(
+              onPressed: _toggleFavorite,
+              icon: Icon(
+                _isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: _isFavorite ? Colors.red : Colors.grey,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            GestureDetector(
+              onTap: _openCalendar,
+              child: Row(
+                children: [
+                  const Icon(Icons.calendar_today),
+                  const SizedBox(width: 5),
+                  Text(
+                    'Продолжительность курса: \n${courseDetails.duration}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              const Text(
-                'Рейтинг курса:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            const Text(
+              'Рейтинг курса:',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(width: 10),
-              _buildStarRating(),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Text(
-            'Количество студентов: ${courseDetails.students}',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
             ),
+            const SizedBox(width: 10),
+            _buildStarRating(),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Text(
+          'Количество студентов: ${courseDetails.students}',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 20),
-          const Text(
-            'Документация:',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          'Документация:',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 5),
-          TextButton(
-            onPressed: () => _navigateToDocumentation(context),
-            child: const Text('Перейти'),
-          ),
-          const SizedBox(height: 20),
-          _buildReviewsSection(),
-        ],
-      ),
+        ),
+        const SizedBox(height: 5),
+        TextButton(
+          onPressed: () => _navigateToDocumentation(context),
+          child: const Text('Перейти'),
+        ),
+        const SizedBox(height: 20),
+        _buildReviewsSection(),
+      ],
     );
   }
 
   Widget _buildStarRating() {
     return Row(
       children: List.generate(
-        4,
+        5,
         (index) => IconButton(
           onPressed: () {
             _setRating(index + 1);
@@ -267,7 +256,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
         _buildReviewsSlider(names),
@@ -361,49 +350,30 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
     );
   }
 
-  Widget _buildFallbackContent() {
-    // Предоставить контент по умолчанию
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Детали курса'),
-      ),
-      body: const Center(
-        child: Text(
-          'Не удалось загрузить данные курса. Попробуйте позже.',
-          style: TextStyle(fontSize: 18),
-        ),
-      ),
-    );
-  }
-
   void _toggleFavorite() {
     setState(() {
       _isFavorite = !_isFavorite;
     });
 
-    print('Toggling favorite status for course ${widget.course.id}');
+    print('Toggling favorite status for course ${_course.id}');
   }
 
-  void _enrollInCourse() {
-    _openPaymentScreen();
-    print('Enrolling user in the course ${widget.course.id}');
+  void _navigateToPayment(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PaymentScreen()),
+    );
   }
 
   void _navigateToDocumentation(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const CourseReadingScreen(
-          courseId: 1,
+        builder: (context) => CoursePage(
+          courseId: _course.id,
+          topics: const [],
         ),
       ),
-    );
-  }
-
-  void _openPaymentScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const PaymentScreen()),
     );
   }
 

@@ -193,7 +193,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         backgroundColor: Colors.white,
                         chipColor: const Color.fromARGB(255, 219, 219, 219),
                         color1: const Color.fromARGB(255, 87, 87, 87),
-                        color: cardColor, onPressed: () {  },
+                        color: cardColor,
+                        onPressed: () {},
+                        context: context, // Передайте context здесь
                       ),
                     );
                   },

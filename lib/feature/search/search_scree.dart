@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:myapp/core/data/model/course.dart';
 import 'package:myapp/core/services/local_storage/local_storage_curse.dart';
-import 'package:myapp/feature/course/screens/course_detail_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -77,14 +76,14 @@ class _SearchScreenState extends State<SearchScreen> {
                       title: Text(_selectedCourse!.name),
                       subtitle: Text(_selectedCourse!.description),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CourseDetailScreen(
-                              course: _selectedCourse!,
-                            ),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => CourseDetailScreen(
+                        //       course: _selectedCourse!!, courseId: null,
+                        //     ),
+                        //   ),
+                        // );
                       },
                     ),
                   )

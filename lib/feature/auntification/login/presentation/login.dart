@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,13 +10,13 @@ import 'package:myapp/router/domain/model_router.dart';
 
 class Login extends StatefulWidget {
   final LoginViewModel viewModel;
-  final AuthenticationRepository authenticationRepository; // Добавьте поле для хранения экземпляра AuthenticationRepository
+  final AuthenticationRepository authenticationRepository;
 
   const Login({
-    Key? key,
+    super.key,
     required this.viewModel,
-    required this.authenticationRepository, // Инициализируйте поле в конструкторе
-  }) : super(key: key);
+    required this.authenticationRepository,
+  });
 
   @override
   _LoginState createState() => _LoginState();
@@ -59,8 +60,8 @@ class _LoginState extends State<Login> {
                 ),
               ),
               const SizedBox(height: 20),
-              Image.asset(
-                'https://sun9-3.userapi.com/impg/zn38HQNq0QnVZlAxFyFfpq9U6dvQzm3WSelHLA/YE5kc5MPMGs.jpg?size=291x269&quality=96&sign=b4e9591ca8a1a99f897012b85c74bdaf&type=album',
+              Image.network(
+                'https://example.com/logo.jpg', // Update this with the correct URL
                 width: 291,
                 height: 269,
               ),
@@ -91,17 +92,9 @@ class _LoginState extends State<Login> {
                     color: Colors.white,
                     border: Border.all(color: Colors.black),
                   ),
-                  child: const Stack(
-                    children: [
-                      Positioned(
-                        left: 8,
-                        top: 6,
-                        child: Icon(
-                          Icons.camera_alt,
-                          color: Color.fromARGB(255, 203, 203, 203),
-                        ),
-                      ),
-                    ],
+                  child: const Icon(
+                    Icons.camera_alt,
+                    color: Color.fromARGB(255, 203, 203, 203),
                   ),
                 ),
               ),
@@ -109,6 +102,13 @@ class _LoginState extends State<Login> {
               ElevatedButton(
                 onPressed: () async {
                   try {
+                    await widget.authenticationRepository.registerUser(
+                      name: nameController.text.trim(),
+                      email: emailController.text.trim(),
+                      password: passwordController.text.trim(),
+                      image: _image,
+                    );
+
                     final userProfile = UserProfile(
                       displayName: nameController.text.trim(),
                       email: emailController.text.trim(),
@@ -119,6 +119,15 @@ class _LoginState extends State<Login> {
                       extra: userProfile,
                     );
                   } catch (e) {
+                    final errorProfile = UserProfile(
+                      displayName: 'Ошибка',
+                      email: emailController.text.trim(),
+                      photoUrl: _image?.path ?? '',
+                    );
+                    context.go(
+                      SkillWaveRouter.profile,
+                      extra: errorProfile,
+                    );
                     print('Registration error: $e');
                   }
                 },
@@ -147,21 +156,15 @@ class _LoginState extends State<Login> {
               TextButton(
                 onPressed: () async {
                   try {
-                    // Вызов метода регистрации через AuthenticationRepository
-                    await widget.authenticationRepository.registerUser(
-                      userName: nameController.text.trim(),
-                      email: emailController.text.trim(),
-                      fullName:
-                          '', // Здесь должно быть поле для полного имени пользователя
-                      password: passwordController.text.trim(),
-                      numberPhone:
-                          '', // Здесь должно быть поле для номера телефона пользователя
+                    await widget.authenticationRepository.authenticateUser(
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
                     );
 
-                    // Переход на экран регистрации
-                    context.go(SkillWaveRouter.signup);
+                    // Navigate to profile screen on successful login
+                    context.go(SkillWaveRouter.profile);
                   } catch (e) {
-                    print('Registration error: $e');
+                    print('Login error: $e');
                   }
                 },
                 child: const Text(

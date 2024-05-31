@@ -45,23 +45,24 @@ class _OnboardingState extends State<Onboarding> {
             controller: controller,
             children: [
               _buildPage(
-                imageUrl: 'https://sun9-8.userapi.com/impg/WxUgIfQXUJGv9cauGpIknoNWma8jm3VlOKbuoA/7PfH-Q1gfCs.jpg?size=234x347&quality=96&sign=ed0350b9d9325842f47b00b5950b6eb2&type=album',
+                imageUrl: '../assets/image/First_Persons.png',
                 title: 'Добро пожаловать!',
                 subtitle:
-                    'Приветствуем тебя на платформе, где ты сможешь раскрыть свой потенциал через обучение.',
+                    'Приветствуем тебя на платформе, где ты сможешь раскрыть свой потенциал через обучение. Наши курсы созданы для того, чтобы помочь тебе освоить новые навыки, расширить горизонты и достичь новых вершин.',
               ),
               _buildPage(
-                imageUrl: 'https://sun9-65.userapi.com/impg/GW2rKPJW0Zqeg7JqnCIV0Tloh_UCivU4RRNfKA/uIb3nWiX1h4.jpg?size=246x352&quality=96&sign=98af8024b96e8cc181908988f7e1328e&type=album',
+                imageUrl: '../assets/image/Two_Persons.png',
                 title: 'Исследуй возможности',
                 subtitle:
                     'Наши курсы предоставляют уникальную возможность глубоко погрузиться в увлекательные области знаний. Давай вместе сделаем обучение интересным и продуктивным!',
               ),
               _buildPage(
-                imageUrl: 'https://sun9-3.userapi.com/impg/9yByl7QCkgt7KggnHf_aykugFz7mhUZjbv9Rkw/BuCljPof_tc.jpg?size=256x359&quality=96&sign=cba82b54f1ddb814c7f9e06d4025616a&type=album',
+                imageUrl: '../assets/image/Free_Persons.png',
                 title: 'Погружение в обучение',
                 subtitle:
                     'Готов ли ты начать учиться? Вместе мы откроем новые горизонты и обретем новые навыки. Наши курсы разработаны для того, чтобы каждый шаг был увлекательным и образовательным.',
-                isLastPage: true,
+                isLastPage:
+                    true, // Добавим флаг, чтобы понять, что это последний экран
               ),
                 Login(
                 viewModel: LoginViewModel(

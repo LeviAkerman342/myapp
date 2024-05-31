@@ -1,74 +1,74 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'supabase_service.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:myapp/core/data/model/course.dart';
-import 'package:myapp/feature/auntification/I_authentication_repository.dart';
+import 'dart:io';
 
-class AuthenticationRepository implements IAuthenticationRepository {
-  final String baseUrl = 'https://learning-courses-back-end.onrender.com/api/v1';
+import 'package:flutter/material.dart';
+import 'package:myapp/feature/auntification/login/interface/registration_strategy.dart';
 
+class GetRegistrationStrategy implements RegistrationStrategy {
   @override
-  Future<void> registerUser({
-    required String userName,
-    required String email,
-    required String fullName,
-    required String password,
-    required String numberPhone,
-  }) async {
-    final Uri url = Uri.parse('$baseUrl/Authentication/User/Registration');
-    final Map<String, String> headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({
-      'userName': userName,
-      'email': email,
-      'fullName': fullName,
-      'password': password,
-      'numberPhone': numberPhone,
-    });
-
-    final response = await http.post(url, headers: headers, body: body);
-
-    if (response.statusCode == 200) {
-      // Registration successful
-      print('Registration successful');
-      print(response.body); // Вывод ответа сервера
-    } else {
-      // Registration failed
-      print('Registration failed: ${response.body}');
-    }
-  }
-
-  Future<Course> fetchCourseDetails(int courseId) async {
-    final String courseUrl = '$baseUrl/Course/Details/$courseId';
+  Future<void> register(BuildContext context, String name, String email,
+      String password, File? image) async {
+    final Uri url = Uri.parse(
+        'https://learning-courses-back-end.onrender.com/api/v1/Authentication/User');
 
     try {
-      final response = await http.get(
-        Uri.parse(courseUrl),
-        headers: {'Content-Type': 'application/json'},
-      );
+      // Build query parameters
+      final Map<String, String> queryParams = {
+        'name': name,
+        'email': email,
+        'password': password,
+        'image': image != null ? base64Encode(image.readAsBytesSync()) : '',
+      };
+
+      // Add query parameters to the URL
+      final Uri uriWithQuery = url.replace(queryParameters: queryParams);
+
+      final HttpClient httpClient = HttpClient();
+      final HttpClientRequest request = await httpClient.getUrl(uriWithQuery);
+      final HttpClientResponse response = await request.close();
 
       if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        final course = Course.fromJson(jsonData);
-        return course;
+        print('Registration successful');
       } else {
-        throw Exception('Ошибка при загрузке данных о курсе');
+        print('Registration failed with status: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Ошибка при соединении с сервером: $e');
+      print('Error during registration: $e');
+    }
+  }
+}
+
+class AuthenticationRepository {
+  final SupabaseClient _client = supabaseService.client;
+
+  Future<void> registerUser({
+    required String name,
+    required String email,
+    required String password,
+    File? image,
+  }) async {
+    final response = await _client.from('users').insert({
+      'name': name,
+      'email': email,
+      'password': password, // Store hashed password in real application
+    });
+
+    if (response.error != null) {
+      throw Exception('Registration failed: ${response.error!.message}');
+    } else {
+      print('Registration successful');
     }
   }
 
-  Future<void> authenticateUser(String emailOrName, String password) async {
-    final Uri url = Uri.parse('$baseUrl/Authentication/User?EmailOrName=$emailOrName&Password=$password');
-
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      // Authentication successful
-      print('Authentication successful');
-      print(response.body); // Вывод ответа сервера
-    } else {
-      // Authentication failed
-      print('Authentication failed: ${response.body}');
-    }
+  Future<void> authenticateUser(String email, String password) async {
+    // final response = await _client
+    //     .from('users')
+    //     .select()
+    //     .eq('email', email)
+    //     .eq('password', password)
+    //     .single(); // Use single() instead of execute()
   }
 }
