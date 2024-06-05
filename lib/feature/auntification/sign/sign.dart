@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myapp/core/data/model/api_service.dart';
 import 'package:myapp/feature/auntification/login/viewmodel/login_view_model.dart';
 import 'package:myapp/router/domain/model_router.dart';
+
+import '../../../core/data/model/api/api_service.dart';
 
 // ignore: must_be_immutable
 class SignUp extends StatelessWidget {
@@ -18,8 +19,6 @@ class SignUp extends StatelessWidget {
   late final LoginViewModel viewModel;
 
   SignUp({super.key});
-
-
 
   Future<void> _getImage() async {
     final ImagePicker picker = ImagePicker();
@@ -52,7 +51,7 @@ class SignUp extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Image.asset(
-                'https://sun9-25.userapi.com/impg/MJL7a_x4_ayzFjYFvkVG7wvH-1tcdmM3a47kuA/tis83kP7Bsk.jpg?size=291x269&quality=96&sign=b6d47824a7a6876edd0a05f1b8401913&type=album',
+                'https://i.postimg.cc/qRcyk1kC/logo-sign.png',
                 width: 291,
                 height: 269,
               ),

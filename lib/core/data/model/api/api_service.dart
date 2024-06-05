@@ -1,11 +1,11 @@
+import 'package:myapp/feature/auntification/login/interface/registration_strategy.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'supabase_service.dart';
+import '../supabase/supabase_service.dart';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:myapp/feature/auntification/login/interface/registration_strategy.dart';
 
 class GetRegistrationStrategy implements RegistrationStrategy {
   @override

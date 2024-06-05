@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:myapp/core/data/model/rest_api_error_model.dart';
+
+import 'model/api/rest_api_error_model.dart';
 
 part 'remote_response.g.dart';
 

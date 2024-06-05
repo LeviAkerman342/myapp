@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
-  const UpdateProfileScreen({Key? key}) : super(key: key);
+  const UpdateProfileScreen({super.key});
 
   @override
   _UpdateProfileScreenState createState() => _UpdateProfileScreenState();
@@ -30,11 +30,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   void _updateProfile() {
     if (_formKey.currentState!.validate()) {
-      // Здесь можно добавить код для обновления профиля пользователя
-      // например, отправка данных на сервер или сохранение их локально
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Профиль обновлен успешно')),
       );
+      // Here you can add code to update the user's profile,
+      // such as sending data to the server or saving it locally.
     }
   }
 

@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:myapp/core/data/model/course.dart';
+import 'package:myapp/core/data/model/course/course.dart';
 
 import '../../core/services/local_storage/local_storage_curse.dart';
 

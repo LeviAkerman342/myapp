@@ -1,6 +1,8 @@
-import 'package:myapp/core/data/model/course.dart';
 
-import '../repositories/course_repository.dart';
+
+
+import 'package:myapp/core/data/model/course/course.dart';
+import 'package:myapp/core/domain/repositories/course_repository.dart';
 
 class GetSelectedCourse {
   final CourseRepository repository;

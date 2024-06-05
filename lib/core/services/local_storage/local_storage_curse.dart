@@ -1,15 +1,17 @@
-import 'package:myapp/core/data/model/course.dart';
+
+import 'package:myapp/core/data/model/course/course.dart';
 
 class LocalStorageService {
   /// Заглушка данных - список курсов
   static List<Course> courses = [
-    Course(
+     Course(
+      
       id: 1,
       imageUrl:
-          "https://sun9-46.userapi.com/impg/dkQjxKb7B355E1PWWmKdH_cya3NMCEGiTEoqVw/fQgXtfAKODo.jpg?size=225x225&quality=96&sign=5aa724b319aeb775f8a1216d934004aa&type=album",
-      name: "Буст английского с нуля до автоматизма (◕‿◕)",
+          "https://cdn.stepik.net/media/cache/images/courses/118419/cover_jYInK41/577e31224fda3a6ab516d7960fa70964.jp",
+      name: "Введение в Flutter",
       description:
-          "Курс направлен на изучение базы, где вся информация предоставлена без лишней воды 📚🧠. Отобранная информация и интересный способ ее подачи превратят скучную школьную программу в увлекательное путешествие по миру английского🌐 Главные отличия: ✔️это выброс лишнего мусора из грамматики и его замена. ✔️информация действительно поможет заговорить на английском. ✔️упрощенный вид подачи материала. ✔️ интересная трактовка времен и правил. ✔️подойдет для тех кто вообще не шарит в английском.",
+          "Основы разработки мобильных приложений с использованием кроссплатформенного фреймворка Flutter и языка Dart.",
       lessons: 16,
       tests: 14,
       documentation: "https://stepik.org/course/188959/promo",
@@ -17,12 +19,13 @@ class LocalStorageService {
       rating: 4.5,
       students: 1200,
       difficultyLevel: "Начальный", // Уровень сложности
-      duration: "4 недели", // Продолжительность курса
+      duration: "8 недели", // Продолжительность курса
       courseCost: 0, // Стоимость курса
-      tags: ["английский", "грамматика", "учеба"],
+      tags: ["flutter", "dart", "Android/Ios"],
     ),
+ 
     Course(
-      id: 2,
+      id: 4,
       imageUrl:
           "https://sun9-27.userapi.com/impg/OuTqT8ihzwjLd7meSRJ8Q1F3zKEPHS-un_9obA/Jlrq8ixxfns.jpg?size=230x230&quality=96&sign=846d2dd8e98881d9195d23089856b490&type=album",
       name: "PRO Go. Основы программирования",
@@ -40,7 +43,7 @@ class LocalStorageService {
       tags: ["программирование", "Goland", "основы"],
     ),
      Course(
-      id: 3,
+      id: 5,
       imageUrl:
           "https://cdn.stepik.net/media/cache/images/courses/103167/cover_Jxz6nQL/82505a6c9ac4f2a9778e21aa22dd6d8a.png",
       name: "JavaScript. A3 Задачи",
@@ -58,7 +61,7 @@ class LocalStorageService {
       tags: ["js", "JS", "Web"],
     ),
       Course(
-      id: 4,
+      id: 6,
       imageUrl:
           "https://cdn.stepik.net/media/cache/images/courses/187490/cover_PV6a4Rz/d9657182ee254b31244717f1b2a21313.png",
       name: "Разработка веб-сервисов на Golang (Go)",
@@ -76,7 +79,7 @@ class LocalStorageService {
       tags: ["js", "JS", "Web"],
     ),
      Course(
-      id: 5,
+      id: 7,
       imageUrl:
           "https://cdn.stepik.net/media/cache/images/courses/100438/cover_GtwIudP/f85ef58c45b814b76539479b9a49f1d6.png",
       name: "Разработка веб-приложений на Node.js",
@@ -94,7 +97,7 @@ class LocalStorageService {
       tags: ["node", "JS", "Web"],
     ),
      Course(
-      id: 6,
+      id: 8,
       imageUrl:
           "https://cdn.stepik.net/media/cache/images/courses/179694/cover_2HZfMiD/e299b805d8a7fec802fadf23c2ab58d5.png",
       name: "Быстрый старт в FastAPI Python",

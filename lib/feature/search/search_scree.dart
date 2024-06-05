@@ -1,7 +1,8 @@
+// lib/feature/search/search_screen.dart
 import 'package:flutter/material.dart';
-
-import 'package:myapp/core/data/model/course.dart';
+import 'package:myapp/core/data/model/course/course.dart';
 import 'package:myapp/core/services/local_storage/local_storage_curse.dart';
+import 'package:myapp/feature/detail_screen_course/detail_course.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -13,7 +14,6 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Course> _searchResults = [];
-  Course? _selectedCourse;
   final LocalStorageService _localStorageService = LocalStorageService();
 
   Future<void> _searchCourses(String query) async {
@@ -67,28 +67,6 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
           ),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: _selectedCourse != null
-                ? Card(
-                    key: ValueKey(_selectedCourse!.id),
-                    child: ListTile(
-                      title: Text(_selectedCourse!.name),
-                      subtitle: Text(_selectedCourse!.description),
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => CourseDetailScreen(
-                        //       course: _selectedCourse!!, courseId: null,
-                        //     ),
-                        //   ),
-                        // );
-                      },
-                    ),
-                  )
-                : const SizedBox(),
-          ),
           Expanded(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
@@ -97,14 +75,20 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Text('Нет результатов'),
                     )
                   : ListView.builder(
+                      key: ValueKey(_searchResults.length),
                       itemCount: _searchResults.length,
                       itemBuilder: (context, index) {
                         final Course course = _searchResults[index];
                         return GestureDetector(
                           onTap: () {
-                            setState(() {
-                              _selectedCourse = course;
-                            });
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CourseDetailScreen(
+                                  course: course,
+                                ),
+                              ),
+                            );
                           },
                           child: Card(
                             key: ValueKey(course.id),

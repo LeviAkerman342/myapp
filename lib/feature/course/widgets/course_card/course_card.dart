@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/feature/course/widgets/course_card/model/course_model.dart';
+import 'package:myapp/core/domain/entities/course_info.dart';
 import 'package:myapp/feature/payment/payment.dart';
 
 class CourseCard extends StatelessWidget {
-  final CourseModel data;
+  final CourseInfo data;
   final Color textColor;
   final Color backgroundColor;
   final Color chipColor;
@@ -100,7 +100,8 @@ class CourseCard extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const PaymentScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const PaymentScreen()),
                   );
                 },
                 icon: Icon(

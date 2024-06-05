@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:myapp/core/data/model/course.dart';
+import 'package:myapp/core/data/model/course/course.dart';
 class StepikApiService {
   static const String authToken = 'kKpT0uT0B1OpmiBgZsNj0bmTeN4ab0r7voPiSNBu';
   static final Dio _dio = Dio();

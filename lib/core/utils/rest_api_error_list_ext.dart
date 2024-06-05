@@ -1,6 +1,6 @@
 
 
-import 'package:myapp/core/data/model/rest_api_error_model.dart';
+import 'package:myapp/core/data/model/api/rest_api_error_model.dart';
 import 'package:myapp/core/domain/app_error/app_error.dart';
 
 extension ErrorConverter on List<RestApiValidationErrorModel> {

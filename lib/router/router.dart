@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:myapp/core/data/model/api_service.dart';
 import 'package:myapp/feature/auntification/sign/sign.dart';
 import 'package:myapp/feature/course/screens/dashboard_screen.dart';
 import 'package:myapp/feature/favorite/favorite_screen.dart';
@@ -7,6 +6,8 @@ import 'package:myapp/feature/onbourding/onboarding_screen.dart';
 import 'package:myapp/feature/profile/profile.dart';
 import 'package:myapp/feature/search/search_scree.dart';
 import 'package:myapp/router/domain/model_router.dart';
+
+import '../core/data/model/api/api_service.dart';
 
 final authenticationRepository = AuthenticationRepository(); 
 

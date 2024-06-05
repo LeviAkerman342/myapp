@@ -1,4 +1,5 @@
-import 'package:myapp/core/data/model/course.dart';
+
+import 'package:myapp/core/data/model/course/course.dart';
 
 abstract class CourseRepository {
   Future<List<Course>> getCourses();

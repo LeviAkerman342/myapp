@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
+import 'package:shimmer/shimmer.dart';
 
-import 'package:myapp/core/data/model/course.dart';
-import 'package:myapp/core/services/local_storage/local_storage_curse.dart';
 import 'package:myapp/feature/bottom_bar/bottom_bar.dart';
 import 'package:myapp/feature/course/widgets/course_card/course_card.dart';
 import 'package:myapp/feature/course/widgets/course_card/model/course_model.dart';
@@ -11,6 +10,8 @@ import 'package:myapp/feature/course/widgets/custom_card/custom_card.dart';
 import 'package:myapp/feature/course/widgets/nav_bar/nav_bar.dart';
 import 'package:myapp/feature/course/widgets/tegs_education/tegs_education.dart';
 import 'package:myapp/feature/course/widgets/theme_manage/theme_manage.dart';
+
+import '../../../core/data/model/course/course.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -33,7 +34,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _themeManager = ThemeManager();
     _pageController = PageController(viewportFraction: 0.8);
     _startTimer();
-    courseList = _getCourseList();
+    courseList = _getCourseList().cast<CourseModel>();
   }
 
   @override
@@ -42,10 +43,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _timer.cancel();
     super.dispose();
   }
+  List<Widget> _buildShimmerLoadingCards() {
+  return List.generate(6, (index) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Container(
+          height: 150,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
+      ),
+    );
+  });
+}
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-      if (_currentPage < LocalStorageService.courses.length - 1) {
+      if (_currentPage < courseList.length - 1) {
         _currentPage++;
       } else {
         _currentPage = 0;
@@ -61,36 +81,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<CourseModel> _getCourseList() {
     return [
       CourseModel(
-        status1: 'Погружение в JavaScript: для начинающих',
+        status1: 'Java Тренажер',
         status2:
-            'Плавное и последовательное погружение в удивительный мир программирования на языке JavaScript для абсолютных новичков.',
+            'Курс включает в себя разнообразные практические задачи по программированию, которые помогут улучшить ваш уровень программирования на Java',
         days: 10,
         info: '100Р',
-        tags: ['JS'],
+        tags: ['Java'],
+        imageUrl:
+            'https://cdn.stepik.net/media/cache/images/courses/182389/cover_3Fr0MKV/109a98256229f2e0a016d801aa271524.jpg',
       ),
       CourseModel(
-        status1: 'JavaScript. A3 Задачи',
+        status1: 'Основы веб-верстки с HTML и CSS',
         status2:
-            'Задачи на программирования на языке JavaScript, формат ввода-вывода делает задачи похожими на задачи на других языка программирования. В курсе используется синтаксис современного стандарта ES6.',
+            'Изучаем основы Web. В ходе курса вы познакомитесь с базовыми веб-технологиями (html и css)',
         days: 20,
         info: '120р',
-        tags: ['JS'],
+        tags: ['Web'],
+        imageUrl:
+            'https://cdn.stepik.net/media/cache/images/courses/129827/cover_sOA4fOO/80cf7f642cac53d02e36feb6ef2d454d.png',
       ),
       CourseModel(
-        status1: 'Разработка веб-сервисов на Golang (Go)',
+        status1: 'Интерактивный тренажер по SQL',
         status2:
-            'Этот курс был создан в 2017 году на основе внедрения языка Go в Почту Mail.ru с целью развития рынка гоферов в РФ.',
+            'В курсе большинство шагов — это практические задания на создание SQL-запросов.',
         days: 10,
         info: '300р',
-        tags: ['Golang'],
+        tags: ['SQL'],
+        imageUrl:
+            'https://cdn.stepik.net/media/cache/images/courses/63054/cover_foIuz1t/6bc976a3abd69e9e3e5163a5973a8ccf.jpg',
       ),
       CourseModel(
-        status1: 'Разработка веб-приложений на Node.js',
+        status1: 'Анимация в After Effects',
         status2:
-            'Авторский курс познакомит слушателей с платформой Node.js. Он будет интересен разработчикам, которые имеют представление о JavaScript, но только начинают знакомство с разработкой серверных приложений на этом языке.',
+            'Это всего лишь ознакомительный фрагмент курса «Анимация в After Effects».',
         days: 20,
         info: '450р',
-        tags: ['Node'],
+        tags: ['AF'],
+        imageUrl: 'https://cdn.stepik.net/media/users/196007098/avatar.png',
       ),
       CourseModel(
         status1: 'Быстрый старт в FastAPI Python',
@@ -99,14 +126,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         days: 10,
         info: '600Р',
         tags: ['FastAPI', 'Python'],
+        imageUrl: '',
       ),
       CourseModel(
-        status1: 'C# Тренажер',
+        status1: 'ОСНОВЫ АЛГОРИТМИЗАЦИИ И ПРОГРАММИРОВАНИЯ',
         status2:
-            'Курс включает в себя множество практических задач по программированию на языке C#, которые способствуют повышению вашего уровня навыков в этой области. ',
+            'Программа учебной дисциплины является частью основной профессиональной образовательной программы',
         days: 20,
         info: '200р',
         tags: ['C#'],
+        imageUrl:
+            'https://cdn.stepik.net/media/cache/images/courses/61349/cover_wb46k6Q/183c84c4d4b0535438ba7f2aa7dac0d6.jpg',
       ),
     ];
   }
@@ -130,116 +160,153 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: _themeManager.themeData,
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              NavBar(
-                userIcon: Icons.person,
-                userName: 'Hello, Nikita',
-                notificationIcon: Icons.notifications,
-                backgroundColor: _themeManager.backgroundColor,
-                textColor: _themeManager.textColor,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: SizedBox(
-                  height: 100,
-                  child: TegsEducation(
-                    textColor: _themeManager.textColor,
-                    onTagTap: (tag) {
-                      setState(() {
-                        selectedTag = tag;
-                        courseList = _getFilteredCourses(tag);
-                      });
-                    },
-                    tags: courseList
-                        .expand((course) => course.tags)
-                        .toSet()
-                        .toList(),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 26),
-              SizedBox(
-                height: 380, // Увеличьте высоту для больших карточек
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: courseList.length,
-                  onPageChanged: (int index) {
+@override
+Widget build(BuildContext context) {
+  return MaterialApp(
+    theme: _themeManager.themeData,
+    home: Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            NavBar(
+              userIcon: Icons.person,
+              userName: 'Приветствуем в Skillwave',
+              notificationIcon: Icons.notifications,
+              backgroundColor: _themeManager.backgroundColor,
+              textColor: _themeManager.textColor,
+            ),
+            // HomeScreen(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: SizedBox(
+                height: 100,
+                child: TegsEducation(
+                  textColor: _themeManager.textColor,
+                  onTagTap: (tag) {
                     setState(() {
-                      _currentPage = index;
+                      selectedTag = tag;
+                      courseList = _getFilteredCourses(tag);
                     });
                   },
-                  itemBuilder: (BuildContext context, int index) {
-                    CourseModel course = courseList[index];
-                    Color cardColor = _generateRandomColor();
-                    return Container(
-                      margin: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16.0),
-                        border:
-                            Border.all(color: Colors.grey), // Add grey border
-                      ),
-                      child: CourseCard(
-                        data: course,
-                        textColor: Colors.black,
-                        backgroundColor: Colors.white,
-                        chipColor: const Color.fromARGB(255, 219, 219, 219),
-                        color1: const Color.fromARGB(255, 87, 87, 87),
-                        color: cardColor,
-                        onPressed: () {},
-                        context: context, // Передайте context здесь
-                      ),
-                    );
-                  },
+                  tags: courseList
+                      .expand((course) => course.tags)
+                      .toSet()
+                      .toList(),
                 ),
               ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 16),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+            ),
+            const SizedBox(height: 26),
+            SizedBox(
+              height: 380,
+              child: courseList.isEmpty
+                  ? PageView(
+                      children: _buildShimmerLoadingCards(),
+                    )
+                  : PageView.builder(
+                      controller: _pageController,
                       itemCount: courseList.length,
-                      itemBuilder: (context, index) {
-                        Course course = LocalStorageService.courses[index];
-                        return CustomCard(
-                          course: course,
-                          backgroundColor: _themeManager.cardBackgroundColor,
+                      onPageChanged: (int index) {
+                        setState(() {
+                          _currentPage = index;
+                        });
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        CourseModel course = courseList[index];
+                        Color cardColor = _generateRandomColor();
+                        return Container(
+                          margin: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16.0),
+                            border:
+                                Border.all(color: Colors.grey), // Add grey border
+                          ),
+                          child: CourseCard(
+                            data: course,
+                            textColor: Colors.black,
+                            backgroundColor: Colors.white,
+                            chipColor: const Color.fromARGB(255, 219, 219, 219),
+                            color1: const Color.fromARGB(255, 87, 87, 87),
+                            color: cardColor,
+                            onPressed: () {},
+                            context: context,
+                          ),
                         );
                       },
                     ),
-                  ],
-                ),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16),
+                  courseList.isEmpty
+                      ? Column(
+                          children: _buildShimmerLoadingCards(),
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: courseList.length,
+                          itemBuilder: (context, index) {
+                            CourseModel course = courseList[index];
+                            return CustomCard(
+                              course: Course(
+                                id: index, // Use index as the id
+                                imageUrl: course.imageUrl.isEmpty
+                                    ? "https://i.pinimg.com/originals/b0/a4/2a/b0a42aaf321b271aa955fec0c3f63dce.gif"
+                                    : course
+                                        .imageUrl, // Use a default image if empty
+                                name: course.status1,
+                                description: course.status2,
+                                lessons: course.days,
+                                tests: 0, // Provide an appropriate value for tests
+                                documentation:
+                                    '', // Provide appropriate documentation URL
+                                price: double.parse(course.info.replaceAll(
+                                    RegExp(r'[^0-9.]'),
+                                    '')), // Extract price from course.info
+                                rating:
+                                    0.0, // Provide an appropriate value for rating
+                                students:
+                                    0, // Provide an appropriate value for students
+                                isFree:
+                                    false, // Provide an appropriate value for isFree
+                                difficultyLevel:
+                                    '', // Provide an appropriate value for difficultyLevel
+                                duration:
+                                    '', // Provide an appropriate value for duration
+                                courseCost:
+                                    0.0, // Provide an appropriate value for courseCost
+                                tags: course.tags,
+                              ),
+                              backgroundColor: _themeManager.cardBackgroundColor,
+                            );
+                          },
+                        ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              _themeManager.toggleTheme();
-            });
-          },
-          backgroundColor: const Color(0xFFD2FF1F),
-          child: const Icon(Icons.color_lens),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        bottomNavigationBar: const BottomNavBar(),
       ),
-    );
-  }
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _themeManager.toggleTheme();
+          });
+        },
+        backgroundColor: const Color.fromARGB(255, 118, 34, 173),
+        child: const Icon(Icons.color_lens),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      bottomNavigationBar: const BottomNavBar(),
+    ),
+  );
+}
 
   Color _generateRandomColor() {
     Random random = Random();

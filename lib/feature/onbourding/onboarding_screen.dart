@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/core/data/model/api_service.dart';
-import 'package:myapp/core/data/model/login_with_image.dart';
+import 'package:myapp/core/data/model/login/login_with_image.dart';
 import 'package:myapp/feature/auntification/login/presentation/login.dart';
 
 import '../../core/bloc/auntification/login_state_block.dart';
+import '../../core/data/model/api/api_service.dart';
 import '../auntification/login/viewmodel/login_view_model.dart';
-
 
 class Onboarding extends StatefulWidget {
   final AuthenticationRepository authenticationRepository;
@@ -47,25 +46,25 @@ class _OnboardingState extends State<Onboarding> {
             controller: controller,
             children: [
                _buildPage(
-                imageUrl: '../assets/image/First_Persons.png',
+                imageUrl: 'https://i.postimg.cc/FsCcsdQG/First-Persons.png',
                 title: 'Добро пожаловать!',
                 subtitle:
-                    'Приветствуем тебя на платформе, где ты сможешь раскрыть свой потенциал через обучение.',
+                    'Приветствуем тебя на платформе, где ты сможешь раскрыть свой потенциал через обучение. Наши курсы созданы для того, чтобы помочь тебе освоить новые навыки, расширить горизонты и достичь новых вершин.',
               ),
               _buildPage(
-                imageUrl: '../assets/image/Two_Persons.png',
+                imageUrl: 'https://i.postimg.cc/FsH34bw7/Free-Persons.png',
                 title: 'Исследуй возможности',
                 subtitle:
                     'Наши курсы предоставляют уникальную возможность глубоко погрузиться в увлекательные области знаний. Давай вместе сделаем обучение интересным и продуктивным!',
               ),
               _buildPage(
-                imageUrl: '../assets/image/Free_Persons.png',
+                imageUrl: 'https://i.postimg.cc/FzDSS1kr/Two-Persons.png',
                 title: 'Погружение в обучение',
                 subtitle:
                     'Готов ли ты начать учиться? Вместе мы откроем новые горизонты и обретем новые навыки. Наши курсы разработаны для того, чтобы каждый шаг был увлекательным и образовательным.',
                 isLastPage: true,
               ),
-            Login(
+              Login(
                 viewModel: LoginViewModel(
                   registrationStrategy: RegistrationWithImage(),
                   registrationStateManager: RegistrationStateManager(),
@@ -77,13 +76,11 @@ class _OnboardingState extends State<Onboarding> {
           Positioned(
             bottom: 30,
             child: Visibility(
-              visible:
-                  currentPage != 3, // Проверяем, не последняя ли это страница
+              visible: currentPage != 3,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(3, (index) {
-                  Color color =
-                      index == currentPage ? Colors.black : Colors.grey;
+                  Color color = index == currentPage ? Colors.black : Colors.grey;
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -99,7 +96,7 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
           ),
-          if (currentPage != 3) // Проверяем, не последняя ли это страница
+          if (currentPage != 3)
             Positioned(
               bottom: 80,
               right: 20,
@@ -143,7 +140,7 @@ class _OnboardingState extends State<Onboarding> {
                 height: 359,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(imageUrl),
+                    image: NetworkImage(imageUrl),
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -159,7 +156,7 @@ class _OnboardingState extends State<Onboarding> {
                   fontSize: 24,
                   fontFamily: 'Roboto Mono',
                   fontWeight: FontWeight.w400,
-                  height: 1.5, // Adjusted line height
+                  height: 1.5,
                 ),
               ),
             ),
@@ -176,7 +173,7 @@ class _OnboardingState extends State<Onboarding> {
                     fontSize: 13,
                     fontFamily: 'Roboto Mono',
                     fontWeight: FontWeight.w400,
-                    height: 1.5, // Adjusted line height
+                    height: 1.5,
                   ),
                 ),
               ),
@@ -198,7 +195,7 @@ class _OnboardingState extends State<Onboarding> {
                 ),
               ),
             ),
-            if (isLastPage) // Проверяем, последняя ли это страница
+            if (isLastPage)
               Positioned(
                 bottom: 80,
                 right: 20,

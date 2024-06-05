@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myapp/core/data/model/api_service.dart';
 import 'package:myapp/feature/auntification/login/viewmodel/login_view_model.dart';
 import 'package:myapp/feature/profile/profile.dart';
 import 'package:myapp/router/domain/model_router.dart';
+
+import '../../../../core/data/model/api/api_service.dart';
 
 class Login extends StatefulWidget {
   final LoginViewModel viewModel;
@@ -61,7 +62,7 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 20),
               Image.network(
-                'https://example.com/logo.jpg', // Update this with the correct URL
+                'https://i.postimg.cc/qBLySDbP/logo-login.png', // Update this with the correct URL
                 width: 291,
                 height: 269,
               ),

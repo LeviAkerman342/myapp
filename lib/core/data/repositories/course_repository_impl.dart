@@ -1,6 +1,4 @@
-
-
-import 'package:myapp/core/data/model/course.dart';
+import 'package:myapp/core/data/model/course/course.dart';
 import 'package:myapp/core/domain/repositories/course_repository.dart';
 
 class CourseRepositoryImpl implements CourseRepository {

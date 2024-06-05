@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +17,7 @@ class UserProfile {
 }
 
 class ProfileScreen extends StatelessWidget {
-  final UserProfile userProfile;
+  final UserProfile? userProfile;
 
   const ProfileScreen({
     super.key,
@@ -27,6 +26,14 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (userProfile == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('User profile is null'),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -58,14 +65,15 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 20),
             CircleAvatar(
               radius: 60,
-              backgroundImage: userProfile.photoUrl.isNotEmpty
-                  ? FileImage(File(userProfile.photoUrl))
-                  : const AssetImage('https://sun9-41.userapi.com/impg/w5a02deF_8VA1cYX9zUHEeQ-3rXkvHeqMY4vdQ/snNPB8fj0pg.jpg?size=736x736&quality=95&sign=4c9251caca6dccd708cb05c6e43d527c&type=album') as ImageProvider,
+              backgroundImage: userProfile!.photoUrl.isNotEmpty
+                  ? NetworkImage(userProfile!.photoUrl)
+                  : const AssetImage('assets/default_avatar.png')
+                      as ImageProvider,
               backgroundColor: Colors.grey[200],
             ),
             const SizedBox(height: 16),
             Text(
-              userProfile.displayName,
+              userProfile!.displayName,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -74,7 +82,7 @@ class ProfileScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Text(
-              userProfile.email,
+              userProfile!.email,
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black,
@@ -85,7 +93,7 @@ class ProfileScreen extends StatelessWidget {
             ProfileMenuWidget(
               title: 'Редактировать профиль',
               icon: Icons.edit,
-              onPress: () => context.push('/update-profile'), // Update this route if necessary
+              onPress: () => context.push('/update-profile'),
             ),
             ProfileMenuWidget(
               title: 'Другие опции',

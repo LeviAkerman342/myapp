@@ -1,6 +1,6 @@
-
-
 import 'package:myapp/core/domain/entities/course_topic.dart';
+import 'package:myapp/feature/course/widgets/documentation/test_quest.dart';
+
 
 class CourseTopicModel extends CourseTopic {
   CourseTopicModel({
@@ -16,8 +16,20 @@ class CourseTopicModel extends CourseTopic {
       title: json['title'],
       theory: json['theory'],
       exampleCode: json['exampleCode'],
-      testQuestions: List<String>.from(json['testQuestions']),
+      testQuestions: List<TestQuestion>.from(
+        json['testQuestions'].map((x) => TestQuestion.fromJson(x)),
+      ),
       videoUrl: json['videoUrl'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'theory': theory,
+      'exampleCode': exampleCode,
+      'testQuestions': testQuestions.map((x) => x.toJson()).toList(),
+      'videoUrl': videoUrl,
+    };
   }
 }

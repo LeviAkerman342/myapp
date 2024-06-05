@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/feature/course/widgets/course_card/model/course_model.dart';
+import 'package:myapp/core/domain/entities/course_info.dart';
 
 class PaymentScreen extends StatelessWidget {
-  final CourseModel? course;
+  final CourseInfo? course;
 
   const PaymentScreen({super.key, this.course});
 

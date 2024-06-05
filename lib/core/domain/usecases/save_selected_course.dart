@@ -1,4 +1,5 @@
-import '../repositories/course_repository.dart';
+
+import 'package:myapp/core/domain/repositories/course_repository.dart';
 
 class SaveSelectedCourse {
   final CourseRepository repository;
