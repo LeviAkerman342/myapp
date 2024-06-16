@@ -8,7 +8,7 @@ class LocalStorageService {
       
       id: 1,
       imageUrl:
-          "https://cdn.stepik.net/media/cache/images/courses/118419/cover_jYInK41/577e31224fda3a6ab516d7960fa70964.jp",
+          "https://poiskovoe-prodvizhenie.ru/wp-content/uploads/flutter.jpg",
       name: "Введение в Flutter",
       description:
           "Основы разработки мобильных приложений с использованием кроссплатформенного фреймворка Flutter и языка Dart.",
@@ -25,7 +25,7 @@ class LocalStorageService {
     ),
  
     Course(
-      id: 4,
+      id: 2,
       imageUrl:
           "https://sun9-27.userapi.com/impg/OuTqT8ihzwjLd7meSRJ8Q1F3zKEPHS-un_9obA/Jlrq8ixxfns.jpg?size=230x230&quality=96&sign=846d2dd8e98881d9195d23089856b490&type=album",
       name: "PRO Go. Основы программирования",
@@ -43,7 +43,7 @@ class LocalStorageService {
       tags: ["программирование", "Goland", "основы"],
     ),
      Course(
-      id: 5,
+      id: 3,
       imageUrl:
           "https://cdn.stepik.net/media/cache/images/courses/103167/cover_Jxz6nQL/82505a6c9ac4f2a9778e21aa22dd6d8a.png",
       name: "JavaScript. A3 Задачи",
@@ -61,7 +61,7 @@ class LocalStorageService {
       tags: ["js", "JS", "Web"],
     ),
       Course(
-      id: 6,
+      id: 4,
       imageUrl:
           "https://cdn.stepik.net/media/cache/images/courses/187490/cover_PV6a4Rz/d9657182ee254b31244717f1b2a21313.png",
       name: "Разработка веб-сервисов на Golang (Go)",
@@ -79,7 +79,7 @@ class LocalStorageService {
       tags: ["js", "JS", "Web"],
     ),
      Course(
-      id: 7,
+      id: 5,
       imageUrl:
           "https://cdn.stepik.net/media/cache/images/courses/100438/cover_GtwIudP/f85ef58c45b814b76539479b9a49f1d6.png",
       name: "Разработка веб-приложений на Node.js",
@@ -97,7 +97,7 @@ class LocalStorageService {
       tags: ["node", "JS", "Web"],
     ),
      Course(
-      id: 8,
+      id: 6,
       imageUrl:
           "https://cdn.stepik.net/media/cache/images/courses/179694/cover_2HZfMiD/e299b805d8a7fec802fadf23c2ab58d5.png",
       name: "Быстрый старт в FastAPI Python",

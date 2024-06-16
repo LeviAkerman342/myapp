@@ -57,18 +57,22 @@ class AuthenticationRepository {
     });
 
     if (response.error != null) {
-      throw Exception('Registration failed: ${response.error!.message}');
+      throw Exception('Registration failed: ${response.error.message}');
     } else {
       print('Registration successful');
     }
   }
 
   Future<void> authenticateUser(String email, String password) async {
-    // final response = await _client
-    //     .from('users')
-    //     .select()
-    //     .eq('email', email)
-    //     .eq('password', password)
-    //     .single(); // Use single() instead of execute()
+    // Authentication logic
+  }
+
+  Future<List<Map<String, dynamic>>> fetchUsers() async {
+    final response = await _client.from('users').select();
+
+    if (response.isEmpty) {
+      throw Exception('No users found');
+    }
+    return List<Map<String, dynamic>>.from(response);
   }
 }

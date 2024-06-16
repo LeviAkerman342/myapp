@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/core/data/model/course/course.dart';
-import 'package:myapp/feature/course/widgets/calendar/calendar.dart';
-import 'package:myapp/feature/course/widgets/documentation/pages/course_page.dart';
-import 'package:myapp/feature/payment/payment.dart';
+import 'package:myapp/core/utils/local_storage_service.dart';
 
+import 'package:myapp/feature/course/widgets/documentation/pages/course_page.dart';
+import 'package:myapp/feature/favorite/favorite_screen.dart';
+import 'package:myapp/feature/payment/payment.dart';
 class CourseDetailScreen extends StatefulWidget {
   final Course course;
 
@@ -24,6 +25,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
   bool _isFavorite = false;
   double _userRating = 0.0;
   final TextEditingController _reviewController = TextEditingController();
+  final LocalStorageService _localStorageService = LocalStorageService();
 
   @override
   void initState() {
@@ -34,6 +36,14 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
     );
 
     _course = widget.course;
+    _checkIfFavorite();
+  }
+
+  Future<void> _checkIfFavorite() async {
+    bool isFavorite = await _localStorageService.isFavoriteCourse(_course);
+    setState(() {
+      _isFavorite = isFavorite;
+    });
   }
 
   @override
@@ -51,6 +61,17 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
         iconTheme: const IconThemeData(color: Colors.black),
         foregroundColor: Colors.black,
         title: Text(_course.name, style: const TextStyle(color: Colors.black)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: Container(
         color: Colors.white,
@@ -62,16 +83,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_course.price == 0) {
-            _navigateToCoursePage();
-          } else {
-            _navigateToPayment(context);
-          }
-        },
-        child: _course.price == 0
-            ? const Icon(Icons.file_copy)
-            : const Icon(Icons.shopping_cart),
+        onPressed: _course.isPaid ? _navigateToCoursePage : _navigateToPayment,
+        child: const Icon(Icons.shopping_cart),
       ),
     );
   }
@@ -163,9 +176,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
             color: Colors.black,
           ),
         ),
-       
-    
-      
         const SizedBox(height: 10),
         const Text(
           'Теги курса:',
@@ -207,8 +217,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed:
-            _navigateToCoursePage, // Здесь вызываем метод для перехода на страницу курса
+        onPressed: _course.isPaid ? _navigateToCoursePage : _navigateToPayment,
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           backgroundColor: const Color.fromARGB(255, 2, 2, 2),
@@ -284,22 +293,20 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        backgroundColor: Color.fromARGB(255, 116, 114, 114),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
         content: Text(
-          'Спасибо за ваш отзыв!',
-          style: TextStyle(color: Colors.black),
+          'Рейтинг отправлен!',
+          style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
         ),
       ),
     );
   }
 
   Widget _buildReviewsSection() {
-    List<String> names = ['Александр', 'Елена', 'Михаил', 'Анна', 'Иван'];
-
+    List<String> names = ['Alice', 'Bob', 'Charlie'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 20),
         const Text(
           'Отзывы:',
           style: TextStyle(
@@ -328,7 +335,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
             width: 200,
             margin: const EdgeInsets.symmetric(horizontal: 8.0),
             decoration: BoxDecoration(
-              color: Colors.white, // Changed to white color
+              color: const Color.fromARGB(255, 255, 255, 255),
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: Padding(
@@ -400,7 +407,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.black,
-            backgroundColor: Colors.white,
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
             side: const BorderSide(color: Colors.black),
           ),
           child: const Text('Отправить'),
@@ -409,18 +416,42 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
     );
   }
 
-  void _toggleFavorite() {
+  void _toggleFavorite() async {
+    if (_isFavorite) {
+      await _localStorageService.removeFavoriteCourse(_course);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          content: Text(
+            'Курс удален из избранного',
+            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+          ),
+        ),
+      );
+    } else {
+      await _localStorageService.addFavoriteCourse(_course);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          content: Text(
+            'Курс добавлен в избранное',
+            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+          ),
+        ),
+      );
+    }
+
     setState(() {
       _isFavorite = !_isFavorite;
     });
-
-    print('Toggling favorite status for course ${_course.id}');
   }
 
-  void _navigateToPayment(BuildContext context) {
+  void _navigateToPayment() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const PaymentScreen()),
+      MaterialPageRoute(
+        builder: (context) => PaymentScreen(course: _course),
+      ),
     );
   }
 
@@ -435,25 +466,13 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
     );
   }
 
-  void _openCalendar() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CalendarScreen(
-          startDate: DateTime.now(),
-          courseDuration: 30,
-        ),
-      ),
-    );
-  }
-
   void _submitReview(String review) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         content: Text(
           'Отзыв отправлен: $review',
-          style: const TextStyle(color: Colors.black),
+          style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
         ),
       ),
     );

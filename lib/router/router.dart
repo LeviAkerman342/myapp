@@ -1,9 +1,13 @@
 import 'package:go_router/go_router.dart';
 import 'package:myapp/feature/auntification/sign/sign.dart';
+import 'package:myapp/feature/chat/chat.dart';
 import 'package:myapp/feature/course/screens/dashboard_screen.dart';
 import 'package:myapp/feature/favorite/favorite_screen.dart';
+import 'package:myapp/feature/list_user/user_list.dart';
 import 'package:myapp/feature/onbourding/onboarding_screen.dart';
+import 'package:myapp/feature/profile/model/user_profile.dart';
 import 'package:myapp/feature/profile/profile.dart';
+import 'package:myapp/feature/profile/update_profile/update_profile.dart';
 import 'package:myapp/feature/search/search_scree.dart';
 import 'package:myapp/router/domain/model_router.dart';
 
@@ -42,6 +46,24 @@ final router = GoRouter(
     GoRoute(
       path: SkillWaveRouter.signup,
       builder: (context, state) => SignUp(),
+    ),
+    GoRoute(
+      path: SkillWaveRouter.chatUsers,
+      builder: (context, state) => const UserSelectionScreen(),
+    ),
+    GoRoute(
+      path: SkillWaveRouter.chat,
+      builder: (context, state) {
+        final user = state.extra as Map<String, dynamic>;
+        return ChatScreen(user: user);
+      },
+    ),
+    GoRoute(
+      path: SkillWaveRouter.updateProfile,
+      builder: (context, state) {
+        final userProfile = state.extra as UserProfile;
+        return UpdateProfileScreen(userProfile: userProfile);
+      },
     ),
   ],
 );

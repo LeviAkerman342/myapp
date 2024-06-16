@@ -1,4 +1,3 @@
-// lib/feature/search/search_screen.dart
 import 'package:flutter/material.dart';
 import 'package:myapp/core/data/model/course/course.dart';
 import 'package:myapp/core/services/local_storage/local_storage_curse.dart';
@@ -11,10 +10,13 @@ class SearchScreen extends StatefulWidget {
   _SearchScreenState createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClientMixin<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Course> _searchResults = [];
   final LocalStorageService _localStorageService = LocalStorageService();
+
+  @override
+  bool get wantKeepAlive => true;
 
   Future<void> _searchCourses(String query) async {
     if (query.isEmpty) {
@@ -36,6 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Needed for AutomaticKeepAliveClientMixin
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,

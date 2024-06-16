@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/core/domain/entities/course_info.dart';
-
+import 'package:myapp/core/data/model/course/course.dart';
 class PaymentScreen extends StatelessWidget {
-  final CourseInfo? course;
+  final Course? course;
 
   const PaymentScreen({super.key, this.course});
 
@@ -37,7 +36,7 @@ class PaymentScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.white, // Устанавливаем цвет стрелочки "назад" в белый
+            color: Colors.white,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -62,12 +61,12 @@ class PaymentScreen extends StatelessWidget {
             const SizedBox(height: 16),
             if (course != null) ...[
               Text(
-                course!.status1,
+                course!.name,
                 style: boldTextStyle,
               ),
               const SizedBox(height: 16),
               Text(
-                course!.status2,
+                course!.description,
                 style: regularTextStyle,
               ),
               const SizedBox(height: 32),
@@ -149,6 +148,11 @@ class PaymentScreen extends StatelessWidget {
 
   void _handleCryptoPayment(
       String yourWallet, String amount, BuildContext context) {
+    // Update the course payment status
+    if (course != null) {
+      course!.isPaid = true;
+    }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -163,7 +167,7 @@ class PaymentScreen extends StatelessWidget {
             ),
           ),
           content: Text(
-            'Курс успешно оплачен! Сумма $amount отправлена на  крипто-кошелек: $yourWallet',
+            'Курс успешно оплачен! Сумма $amount отправлена на крипто-кошелек: $yourWallet',
             style: const TextStyle(
               color: Colors.black87,
               fontSize: 18,
@@ -173,6 +177,7 @@ class PaymentScreen extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                Navigator.pop(context); // Navigate back to the course details
               },
               child: const Text(
                 'OK',

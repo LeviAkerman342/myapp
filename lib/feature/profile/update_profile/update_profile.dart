@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/feature/profile/model/user_profile.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
-  const UpdateProfileScreen({super.key});
+  final UserProfile userProfile;
+
+  const UpdateProfileScreen({super.key, required this.userProfile});
 
   @override
   _UpdateProfileScreenState createState() => _UpdateProfileScreenState();
@@ -9,10 +12,17 @@ class UpdateProfileScreen extends StatefulWidget {
 
 class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _fullNameController = TextEditingController();
-  final _emailController = TextEditingController();
+  late TextEditingController _fullNameController;
+  late TextEditingController _emailController;
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fullNameController = TextEditingController(text: widget.userProfile.displayName);
+    _emailController = TextEditingController(text: widget.userProfile.email);
+  }
 
   @override
   void dispose() {
@@ -51,11 +61,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(
+              Center(
                 child: CircleAvatar(
                   radius: 60,
-                  backgroundColor: Colors.grey,
-                  child: Icon(Icons.person, size: 60, color: Colors.white),
+                  backgroundImage: widget.userProfile.photoUrl.isNotEmpty
+                      ? NetworkImage(widget.userProfile.photoUrl)
+                      : const AssetImage('assets/default_avatar.png') as ImageProvider,
                 ),
               ),
               const SizedBox(height: 32),

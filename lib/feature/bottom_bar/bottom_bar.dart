@@ -8,55 +8,43 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 47, 47, 47),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(40.0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, -3),
-          ),
-        ],
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(255, 47, 47, 47),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
+        padding: const EdgeInsets.only(bottom: 12.0, top: 6.0),
         child: SizedBox(
           height: 60.0,
-          width: 345.0,
           child: BottomAppBar(
             color: Colors.transparent,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.home),
-                  color: Colors.white,
-                  onPressed: () {
-                    GoRouter.of(context).go(SkillWaveRouter.dashboard);
-                  },
+                _buildNavItem(
+                  context,
+                  icon: Icons.home_outlined,
+                  route: '/',
                 ),
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  color: Colors.white,
-                  onPressed: () {
-                    GoRouter.of(context).go(SkillWaveRouter.search);
-                  },
+                _buildNavItem(
+                  context,
+                  icon: Icons.search_outlined,
+                  route: SkillWaveRouter.search,
                 ),
-                IconButton(
-                  icon: const Icon(Icons.favorite),
-                  color: Colors.white,
-                  onPressed: () {
-                    GoRouter.of(context).go(SkillWaveRouter.favorites);
-                  },
+                _buildNavItem(
+                  context,
+                  icon: Icons.favorite_outline,
+                  route: SkillWaveRouter.favorites,
                 ),
-                IconButton(
-                  icon: const Icon(Icons.account_circle),
-                  color: Colors.white,
-                  onPressed: () {
-                    GoRouter.of(context).go(SkillWaveRouter.profile);
-                  },
+                _buildNavItem(
+                  context,
+                  icon: Icons.chat_bubble_outline,
+                  route: '/userSelection',
+                ),
+                _buildNavItem(
+                  context,
+                  icon: Icons.account_circle_outlined,
+                  route: SkillWaveRouter.profile,
                 ),
               ],
             ),
@@ -65,5 +53,19 @@ class BottomNavBar extends StatelessWidget {
       ),
     );
   }
-}
 
+  Widget _buildNavItem(BuildContext context, {required IconData icon, required String route}) {
+    return IconButton(
+      icon: Icon(icon),
+      color: Colors.white,
+      iconSize: 28.0,
+      onPressed: () {
+        GoRouter.of(context).go(route);
+      },
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14.0),
+      splashRadius: 24.0,
+      splashColor: Colors.grey.shade800,
+      hoverColor: Colors.grey.shade700,
+    );
+  }
+}

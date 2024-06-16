@@ -1,23 +1,12 @@
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:myapp/feature/profile/model/user_profile.dart';
 import 'package:myapp/feature/profile/profile_menu.dart';
 import 'package:myapp/router/domain/model_router.dart';
 
-class UserProfile {
-  final String displayName;
-  final String email;
-  final String photoUrl;
-
-  UserProfile({
-    required this.displayName,
-    required this.email,
-    required this.photoUrl,
-  });
-}
-
 class ProfileScreen extends StatelessWidget {
-  final UserProfile? userProfile;
+  final UserProfile userProfile;
 
   const ProfileScreen({
     super.key,
@@ -26,14 +15,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (userProfile == null) {
-      return const Scaffold(
-        body: Center(
-          child: Text('User profile is null'),
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -65,15 +46,15 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 20),
             CircleAvatar(
               radius: 60,
-              backgroundImage: userProfile!.photoUrl.isNotEmpty
-                  ? NetworkImage(userProfile!.photoUrl)
+              backgroundImage: userProfile.photoUrl.isNotEmpty
+                  ? FileImage(File(userProfile.photoUrl))
                   : const AssetImage('assets/default_avatar.png')
                       as ImageProvider,
               backgroundColor: Colors.grey[200],
             ),
             const SizedBox(height: 16),
             Text(
-              userProfile!.displayName,
+              userProfile.displayName,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -82,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Text(
-              userProfile!.email,
+              userProfile.email,
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black,
@@ -93,7 +74,7 @@ class ProfileScreen extends StatelessWidget {
             ProfileMenuWidget(
               title: 'Редактировать профиль',
               icon: Icons.edit,
-              onPress: () => context.push('/update-profile'),
+              onPress: () => context.push(SkillWaveRouter.updateProfile, extra: userProfile),
             ),
             ProfileMenuWidget(
               title: 'Другие опции',

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -62,7 +61,7 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 20),
               Image.network(
-                'https://i.postimg.cc/qBLySDbP/logo-login.png', // Update this with the correct URL
+                'https://i.postimg.cc/qBLySDbP/logo-login.png',
                 width: 291,
                 height: 269,
               ),
@@ -113,15 +112,18 @@ class _LoginState extends State<Login> {
                     final userProfile = UserProfile(
                       displayName: nameController.text.trim(),
                       email: emailController.text.trim(),
-                      photoUrl: _image?.path ?? '',
+                      photoUrl: _image != null ? _image!.path : '',
                     );
+
+                    print('UserProfile created: ${userProfile.displayName}, ${userProfile.email}, ${userProfile.photoUrl}');
+
                     context.go(
                       SkillWaveRouter.profile,
                       extra: userProfile,
                     );
                   } catch (e) {
                     final errorProfile = UserProfile(
-                      displayName: 'Ошибка',
+                      displayName: nameController.text.trim(),
                       email: emailController.text.trim(),
                       photoUrl: _image?.path ?? '',
                     );
@@ -162,7 +164,6 @@ class _LoginState extends State<Login> {
                       passwordController.text.trim(),
                     );
 
-                    // Navigate to profile screen on successful login
                     context.go(SkillWaveRouter.profile);
                   } catch (e) {
                     print('Login error: $e');

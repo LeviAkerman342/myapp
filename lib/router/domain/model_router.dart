@@ -5,4 +5,7 @@ abstract class SkillWaveRouter {
   static const search = '/search';
   static const favorites = '/favorites';
   static const signup = '/sign';
+  static const chatUsers = '/chatUsers';
+  static const chat = '/chat';
+  static const updateProfile = '/update-profile';
 }

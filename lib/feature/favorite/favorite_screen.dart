@@ -1,10 +1,6 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:myapp/core/data/model/course/course.dart';
-
-import '../../core/services/local_storage/local_storage_curse.dart';
-
+import 'package:myapp/core/utils/local_storage_service.dart';
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
 
@@ -14,7 +10,7 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   final LocalStorageService _localStorageService = LocalStorageService();
-  late List<Course> _favoriteCourses;
+  late List<Course> _favoriteCourses = [];
 
   @override
   void initState() {
@@ -23,8 +19,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   Future<void> _loadFavoriteCourses() async {
-    final List<Course> favoriteCourses =
-        await _localStorageService.getFavoriteCourses();
+    final List<Course> favoriteCourses = await _localStorageService.getFavoriteCourses();
     setState(() {
       _favoriteCourses = favoriteCourses;
     });

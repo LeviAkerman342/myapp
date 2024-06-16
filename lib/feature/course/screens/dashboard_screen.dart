@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/feature/story/story.dart';
 import 'dart:async';
 import 'dart:math';
 import 'package:shimmer/shimmer.dart';
@@ -28,6 +29,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<CourseModel> courseList = [];
   String selectedTag = '';
 
+  final List<Map<String, String>> stories = [
+    {'type': 'image', 'url': 'https://i.pinimg.com/564x/e6/0d/a3/e60da318b135e5130c1d45e7789767af.jpg'},
+    {'type': 'image', 'url': 'https://i.pinimg.com/564x/f9/47/bf/f947bfbb294cff3ab27d78b0c059870d.jpg'},
+    {'type': 'image', 'url': 'https://i.pinimg.com/564x/f7/4e/0b/f74e0bd73320281938ec3ea61738c376.jpg'},
+    {'type': 'gif', 'url': 'https://i.pinimg.com/originals/0f/b9/4d/0fb94dff52a5935e105ec497a0c010a5.gif'}
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -43,25 +51,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _timer.cancel();
     super.dispose();
   }
+
   List<Widget> _buildShimmerLoadingCards() {
-  return List.generate(6, (index) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: Container(
-          height: 150,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.0),
+    return List.generate(6, (index) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            height: 150,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.0),
+            ),
           ),
         ),
-      ),
-    );
-  });
-}
+      );
+    });
+  }
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
@@ -80,6 +89,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<CourseModel> _getCourseList() {
     return [
+      CourseModel(
+        status1: 'Введение в Flutter',
+        status2:
+            'Основы разработки мобильных приложений с использованием кроссплатформенного фреймворка Flutter и языка Dart.',
+        days: 10,
+        info: '500Р',
+        tags: ['Flutter','Dart','Android/IOS'],
+        imageUrl:
+            'https://poiskovoe-prodvizhenie.ru/wp-content/uploads/flutter.jpg',
+      ),
       CourseModel(
         status1: 'Java Тренажер',
         status2:
@@ -160,153 +179,146 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-@override
-Widget build(BuildContext context) {
-  return MaterialApp(
-    theme: _themeManager.themeData,
-    home: Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            NavBar(
-              userIcon: Icons.person,
-              userName: 'Приветствуем в Skillwave',
-              notificationIcon: Icons.notifications,
-              backgroundColor: _themeManager.backgroundColor,
-              textColor: _themeManager.textColor,
-            ),
-            // HomeScreen(),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: SizedBox(
-                height: 100,
-                child: TegsEducation(
-                  textColor: _themeManager.textColor,
-                  onTagTap: (tag) {
-                    setState(() {
-                      selectedTag = tag;
-                      courseList = _getFilteredCourses(tag);
-                    });
-                  },
-                  tags: courseList
-                      .expand((course) => course.tags)
-                      .toSet()
-                      .toList(),
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: _themeManager.themeData,
+      home: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NavBar(
+                userIcon: Icons.person,
+                userName: 'Приветствуем в Skillwave',
+                notificationIcon: Icons.notifications,
+                backgroundColor: _themeManager.backgroundColor,
+                textColor: _themeManager.textColor,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: StoryWidget(stories: stories), 
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: SizedBox(
+                  height: 100,
+                  child: TegsEducation(
+                    textColor: _themeManager.textColor,
+                    onTagTap: (tag) {
+                      setState(() {
+                        selectedTag = tag;
+                        courseList = _getFilteredCourses(tag);
+                      });
+                    },
+                    tags: courseList
+                        .expand((course) => course.tags)
+                        .toSet()
+                        .toList(),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 26),
-            SizedBox(
-              height: 380,
-              child: courseList.isEmpty
-                  ? PageView(
-                      children: _buildShimmerLoadingCards(),
-                    )
-                  : PageView.builder(
-                      controller: _pageController,
-                      itemCount: courseList.length,
-                      onPageChanged: (int index) {
-                        setState(() {
-                          _currentPage = index;
-                        });
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        CourseModel course = courseList[index];
-                        Color cardColor = _generateRandomColor();
-                        return Container(
-                          margin: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16.0),
-                            border:
-                                Border.all(color: Colors.grey), // Add grey border
-                          ),
-                          child: CourseCard(
-                            data: course,
-                            textColor: Colors.black,
-                            backgroundColor: Colors.white,
-                            chipColor: const Color.fromARGB(255, 219, 219, 219),
-                            color1: const Color.fromARGB(255, 87, 87, 87),
-                            color: cardColor,
-                            onPressed: () {},
-                            context: context,
-                          ),
-                        );
-                      },
-                    ),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
-                  courseList.isEmpty
-                      ? Column(
-                          children: _buildShimmerLoadingCards(),
-                        )
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: courseList.length,
-                          itemBuilder: (context, index) {
-                            CourseModel course = courseList[index];
-                            return CustomCard(
-                              course: Course(
-                                id: index, // Use index as the id
-                                imageUrl: course.imageUrl.isEmpty
-                                    ? "https://i.pinimg.com/originals/b0/a4/2a/b0a42aaf321b271aa955fec0c3f63dce.gif"
-                                    : course
-                                        .imageUrl, // Use a default image if empty
-                                name: course.status1,
-                                description: course.status2,
-                                lessons: course.days,
-                                tests: 0, // Provide an appropriate value for tests
-                                documentation:
-                                    '', // Provide appropriate documentation URL
-                                price: double.parse(course.info.replaceAll(
-                                    RegExp(r'[^0-9.]'),
-                                    '')), // Extract price from course.info
-                                rating:
-                                    0.0, // Provide an appropriate value for rating
-                                students:
-                                    0, // Provide an appropriate value for students
-                                isFree:
-                                    false, // Provide an appropriate value for isFree
-                                difficultyLevel:
-                                    '', // Provide an appropriate value for difficultyLevel
-                                duration:
-                                    '', // Provide an appropriate value for duration
-                                courseCost:
-                                    0.0, // Provide an appropriate value for courseCost
-                                tags: course.tags,
-                              ),
-                              backgroundColor: _themeManager.cardBackgroundColor,
-                            );
-                          },
-                        ),
-                ],
+              const SizedBox(height: 26),
+              SizedBox(
+                height: 380,
+                child: courseList.isEmpty
+                    ? PageView(
+                        children: _buildShimmerLoadingCards(),
+                      )
+                    : PageView.builder(
+                        controller: _pageController,
+                        itemCount: courseList.length,
+                        onPageChanged: (int index) {
+                          setState(() {
+                            _currentPage = index;
+                          });
+                        },
+                        itemBuilder: (BuildContext context, int index) {
+                          CourseModel course = courseList[index];
+                          Color cardColor = _generateRandomColor();
+                          return Container(
+                            margin: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.0),
+                              border: Border.all(color: Colors.grey),
+                            ),
+                            child: CourseCard(
+                              data: course,
+                              textColor: Colors.black,
+                              backgroundColor: Colors.white,
+                              chipColor: const Color.fromARGB(255, 219, 219, 219),
+                              color1: const Color.fromARGB(255, 87, 87, 87),
+                              color: cardColor,
+                              onPressed: () {},
+                              context: context,
+                            ),
+                          );
+                        },
+                      ),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 16),
+                    courseList.isEmpty
+                        ? Column(
+                            children: _buildShimmerLoadingCards(),
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: courseList.length,
+                            itemBuilder: (context, index) {
+                              CourseModel course = courseList[index];
+                              return CustomCard(
+                                course: Course(
+                                  id: index,
+                                  imageUrl: course.imageUrl.isEmpty
+                                      ? "https://i.pinimg.com/originals/b0/a4/2a/b0a42aaf321b271aa955fec0c3f63dce.gif"
+                                      : course.imageUrl,
+                                  name: course.status1,
+                                  description: course.status2,
+                                  lessons: course.days,
+                                  tests: 0,
+                                  documentation: '',
+                                  price: double.parse(course.info.replaceAll(
+                                      RegExp(r'[^0-9.]'), '')),
+                                  rating: 0.0,
+                                  students: 0,
+                                  isFree: false,
+                                  difficultyLevel: '',
+                                  duration: '',
+                                  courseCost: 0.0,
+                                  tags: course.tags,
+                                ),
+                                backgroundColor: _themeManager.cardBackgroundColor,
+                              );
+                            },
+                          ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              _themeManager.toggleTheme();
+            });
+          },
+          backgroundColor: const Color.fromARGB(255, 118, 34, 173),
+          child: const Icon(Icons.color_lens),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        bottomNavigationBar: const BottomNavBar(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _themeManager.toggleTheme();
-          });
-        },
-        backgroundColor: const Color.fromARGB(255, 118, 34, 173),
-        child: const Icon(Icons.color_lens),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: const BottomNavBar(),
-    ),
-  );
-}
+    );
+  }
 
   Color _generateRandomColor() {
     Random random = Random();
