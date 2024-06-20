@@ -196,24 +196,7 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
             if (isLastPage)
-              Positioned(
-                bottom: 80,
-                right: 20,
-                child: !isLastPage
-                    ? IconButton(
-                        icon: const Icon(Icons.arrow_forward),
-                        onPressed: () {
-                          if (currentPage < 3) {
-                            controller.animateToPage(
-                              currentPage + 1,
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.easeInOut,
-                            );
-                          }
-                        },
-                      )
-                    : const SizedBox(),
-              ),
+              const SizedBox(),
           ],
         ),
       ),

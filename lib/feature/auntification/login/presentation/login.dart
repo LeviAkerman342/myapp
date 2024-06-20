@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myapp/feature/auntification/login/viewmodel/login_view_model.dart';
-import 'package:myapp/feature/profile/profile.dart';
+import 'package:myapp/feature/profile/model/user_profile.dart';
 import 'package:myapp/router/domain/model_router.dart';
 
 import '../../../../core/data/model/api/api_service.dart';

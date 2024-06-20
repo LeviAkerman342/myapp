@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/core/data/model/course/course.dart';
 import 'package:myapp/core/services/local_storage/local_storage_curse.dart';
 import 'package:myapp/feature/detail_screen_course/detail_course.dart';
+import 'package:myapp/theme/color.dart'; // Подключаем файл с цветами
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -41,16 +42,16 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
     super.build(context); // Needed for AutomaticKeepAliveClientMixin
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppLightColors.background, // Изменен фон
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: AppLightColors.button), // Изменен цвет иконки
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         title: const Text(
           'Поиск курсов',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: AppLightColors.button), // Изменен цвет текста
         ),
       ),
       body: Column(
@@ -63,7 +64,7 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
               decoration: InputDecoration(
                 labelText: 'Поиск курсов',
                 hintText: 'Введите название курса',
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search, color: AppLightColors.button), // Изменен цвет иконки
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
@@ -100,8 +101,8 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
                               leading: CircleAvatar(
                                 backgroundImage: NetworkImage(course.imageUrl),
                               ),
-                              title: Text(course.name),
-                              subtitle: Text(course.description),
+                              title: Text(course.name, style: const TextStyle(color: AppLightColors.button)), // Изменен цвет текста
+                              subtitle: Text(course.description, style: const TextStyle(color: AppLightColors.tagText)), // Изменен цвет текста
                             ),
                           ),
                         );

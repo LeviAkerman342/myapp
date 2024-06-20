@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:myapp/feature/profile/model/user_profile.dart';
 import 'package:myapp/feature/profile/profile_menu.dart';
 import 'package:myapp/router/domain/model_router.dart';
+import 'package:myapp/theme/color.dart';
 
 class ProfileScreen extends StatelessWidget {
   final UserProfile userProfile;
@@ -16,23 +17,23 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppLightColors.background, // Изменен фон
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: AppLightColors.button), // Изменен цвет иконки
           onPressed: () {
             context.go(SkillWaveRouter.dashboard);
           },
         ),
         title: const Text(
           'Профиль',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: AppLightColors.button), // Изменен цвет текста
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppLightColors.background, // Изменен цвет фона
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout, color: Colors.black),
+            icon: const Icon(Icons.logout, color: AppLightColors.button), // Изменен цвет иконки
             onPressed: () {
               context.go(SkillWaveRouter.onboarding);
             },
@@ -58,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: AppLightColors.button, // Изменен цвет текста
               ),
               textAlign: TextAlign.center,
             ),
@@ -66,7 +67,7 @@ class ProfileScreen extends StatelessWidget {
               userProfile.email,
               style: const TextStyle(
                 fontSize: 16,
-                color: Colors.black,
+                color: AppLightColors.tagText, // Изменен цвет текста
               ),
               textAlign: TextAlign.center,
             ),

@@ -179,18 +179,7 @@ class _OnboardingState extends State<Onboarding> {
             if (isLastPage)
               Padding(
                 padding: EdgeInsets.only(top: constraints.maxHeight * 0.1),
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_forward),
-                  onPressed: () {
-                    if (currentPage < 3) {
-                      controller.animateToPage(
-                        currentPage + 1,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeInOut,
-                      );
-                    }
-                  },
-                ),
+                child: const SizedBox(),
               ),
           ],
         ),

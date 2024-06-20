@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/core/data/model/course/course.dart';
+import 'package:myapp/feature/course/widgets/documentation/pages/course_page.dart';
+import 'package:myapp/theme/color.dart';
+
 class PaymentScreen extends StatelessWidget {
   final Course? course;
 
@@ -10,25 +13,24 @@ class PaymentScreen extends StatelessWidget {
     const TextStyle boldTextStyle = TextStyle(
       fontSize: 24,
       fontWeight: FontWeight.bold,
-      color: Colors.black87,
+      color: AppLightColors.button,
     );
     const TextStyle regularTextStyle = TextStyle(
       fontSize: 18,
-      color: Colors.black87,
+      color: AppLightColors.button,
     );
     const EdgeInsets textFieldPadding =
         EdgeInsets.symmetric(vertical: 16, horizontal: 24);
     final TextEditingController yourWalletController = TextEditingController();
     final TextEditingController amountController = TextEditingController();
 
-    // Sample wallet address, replace it with the actual wallet address
     const String walletAddress =
         'UQBbxh6mzjvmYLNiPJKRKPe8e-d8aj1E-6c4-NYBFjg-3j0V';
 
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: AppLightColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppLightColors.button,
         title: Text(
           'Оплата курса',
           style: boldTextStyle.copyWith(color: Colors.white),
@@ -43,7 +45,7 @@ class PaymentScreen extends StatelessWidget {
           },
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -125,7 +127,7 @@ class PaymentScreen extends StatelessWidget {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: AppLightColors.tagText,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -148,7 +150,6 @@ class PaymentScreen extends StatelessWidget {
 
   void _handleCryptoPayment(
       String yourWallet, String amount, BuildContext context) {
-    // Update the course payment status
     if (course != null) {
       course!.isPaid = true;
     }
@@ -161,7 +162,7 @@ class PaymentScreen extends StatelessWidget {
           title: const Text(
             'Оплата выполнена',
             style: TextStyle(
-              color: Colors.black,
+              color: AppLightColors.button,
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
@@ -169,7 +170,7 @@ class PaymentScreen extends StatelessWidget {
           content: Text(
             'Курс успешно оплачен! Сумма $amount отправлена на крипто-кошелек: $yourWallet',
             style: const TextStyle(
-              color: Colors.black87,
+              color: AppLightColors.button,
               fontSize: 18,
             ),
           ),
@@ -177,12 +178,17 @@ class PaymentScreen extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pop(context); // Navigate back to the course details
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CoursePage(courseId: course?.id ?? 0),
+                  ),
+                );
               },
               child: const Text(
                 'OK',
                 style: TextStyle(
-                  color: Colors.green,
+                  color: AppLightColors.tagText,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),

@@ -6,11 +6,11 @@ class TegsEducation extends StatefulWidget {
   final Function(String) onTagTap;
 
   const TegsEducation({
-    super.key,
+    Key? key,
     required this.textColor,
     required this.tags,
     required this.onTagTap,
-  });
+  }) : super(key: key);
 
   @override
   _TegsEducationState createState() => _TegsEducationState();
@@ -45,35 +45,29 @@ class _TegsEducationState extends State<TegsEducation> {
         widget.onTagTap(text);
       },
       onTapDown: (_) {
-        setState(() {
-          hoverStates[index] = true;
-        });
+        _updateHoverState(index, true);
       },
       onTapUp: (_) {
-        setState(() {
-          hoverStates[index] = false;
-        });
+        _updateHoverState(index, false);
       },
       onTapCancel: () {
-        setState(() {
-          hoverStates[index] = false;
-        });
+        _updateHoverState(index, false);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          border: Border.all(color: const Color.fromARGB(255, 99, 99, 99), width: 2), // Серая обводка
+          border: Border.all(color: const Color.fromARGB(255, 99, 99, 99), width: 2), // Gray border
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
             if (hoverStates[index])
               const BoxShadow(
-                color: Colors.black, 
+                color: Colors.black,
                 blurRadius: 20,
                 spreadRadius: -5,
               ),
           ],
-          color: Colors.white, 
+          color: Colors.white, // Background color
         ),
         child: AnimatedOpacity(
           duration: const Duration(milliseconds: 200),
@@ -92,5 +86,11 @@ class _TegsEducationState extends State<TegsEducation> {
         ),
       ),
     );
+  }
+
+  void _updateHoverState(int index, bool isHovered) {
+    setState(() {
+      hoverStates[index] = isHovered;
+    });
   }
 }

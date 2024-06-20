@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/core/data/model/course/course.dart';
 import 'package:myapp/core/data/model/course/course_topic.dart';
 import 'package:myapp/core/data/repositories/course_repository_impl.dart';
 import 'package:myapp/core/domain/entities/course_topic.dart';
@@ -11,7 +12,7 @@ import '../widgets/video_tab.dart';
 class CoursePage extends StatefulWidget {
   final int courseId;
 
-  const CoursePage({super.key, required this.courseId});
+  const CoursePage({super.key, required this.courseId, Course? course});
 
   @override
   _CoursePageState createState() => _CoursePageState();

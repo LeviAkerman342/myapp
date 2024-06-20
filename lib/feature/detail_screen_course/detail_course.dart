@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/core/data/model/course/course.dart';
 import 'package:myapp/core/utils/local_storage_service.dart';
-
 import 'package:myapp/feature/course/widgets/documentation/pages/course_page.dart';
 import 'package:myapp/feature/favorite/favorite_screen.dart';
 import 'package:myapp/feature/payment/payment.dart';
+
 class CourseDetailScreen extends StatefulWidget {
   final Course course;
 
@@ -83,7 +83,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _course.isPaid ? _navigateToCoursePage : _navigateToPayment,
+        onPressed: _navigateToCoursePage,
         child: const Icon(Icons.shopping_cart),
       ),
     );
@@ -217,7 +217,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: _course.isPaid ? _navigateToCoursePage : _navigateToPayment,
+        onPressed: _navigateToCoursePage,
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           backgroundColor: const Color.fromARGB(255, 2, 2, 2),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/core/data/model/course/course.dart';
 import 'package:myapp/core/utils/local_storage_service.dart';
+
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
 
@@ -35,6 +36,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Избранное'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: _favoriteCourses.isEmpty
           ? const Center(

@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
 
 class ThemeManager {
-  bool _isDarkMode = false;
+  ValueNotifier<bool> _isDarkMode = ValueNotifier(false);
 
-  // Возвращает текущую тему в зависимости от выбранного режима (светлая или темная).
-  ThemeData get themeData => _isDarkMode ? darkTheme : lightTheme;
+  ValueNotifier<bool> get isDarkModeNotifier => _isDarkMode;
 
-  // Цвет фона, который меняется в зависимости от выбранной темы.
+  ThemeData get themeData => _isDarkMode.value ? darkTheme : lightTheme;
+
   Color get backgroundColor =>
-      _isDarkMode ? const Color.fromARGB(255, 0, 0, 0) : const Color.fromARGB(255, 250, 249, 249);
+      _isDarkMode.value ? const Color.fromARGB(255, 0, 0, 0) : const Color.fromARGB(255, 250, 249, 249);
 
-  // Цвет текста, который меняется в зависимости от выбранной темы.
-  Color get textColor => _isDarkMode ? Colors.white : Colors.black;
+  Color get textColor => _isDarkMode.value ? Colors.white : Colors.black;
 
-  // Цвет фона карточек, который меняется в зависимости от выбранной темы.
   Color get cardBackgroundColor =>
-      _isDarkMode ? const Color.fromARGB(255, 0, 0, 0) : const Color.fromARGB(255, 255, 255, 255);
+      _isDarkMode.value ? const Color.fromARGB(255, 0, 0, 0) : const Color.fromARGB(255, 255, 255, 255);
 
-  // Метод для переключения между светлой и темной темами.
   void toggleTheme() {
-    _isDarkMode = !_isDarkMode;
+    _isDarkMode.value = !_isDarkMode.value;
   }
 
-  // Светлая тема приложения.
   final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     textTheme: ThemeData.light().textTheme.apply(
@@ -34,12 +30,10 @@ class ThemeManager {
     ),
   );
 
-  // Темная тема приложения.
   final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     textTheme: ThemeData.dark().textTheme.apply(
-      bodyColor: const Color.fromARGB(255, 238, 238, 238), 
-      // Изменен цвет текста для темной темы
+      bodyColor: const Color.fromARGB(255, 238, 238, 238),
       displayColor: const Color.fromARGB(255, 12, 12, 12),
     ),
     colorScheme: const ColorScheme.dark(
