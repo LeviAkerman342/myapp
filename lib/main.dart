@@ -1,8 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/router/router.dart';
+import 'package:myapp/feature/chat/data/database_helper.dart';
+import 'package:myapp/feature/chat/data/repositories/local_chat_repository.dart';
+import 'package:provider/provider.dart';
+import 'router/router.dart';
+
 
 void main() {
-  runApp(const MyApp());
+  final databaseHelper = DatabaseHelper();
+  final chatRepository = LocalChatRepository(databaseHelper);
+
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<LocalChatRepository>(
+          create: (_) => chatRepository,
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

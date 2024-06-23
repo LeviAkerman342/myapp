@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/core/data/model/course/course.dart';
 import 'package:myapp/feature/detail_screen_course/detail_course.dart';
+import 'package:myapp/feature/course/widgets/theme_manage/theme_manage.dart';
 
 class CustomCard extends StatelessWidget {
   final Course course;
-  final Color backgroundColor;
+  final ThemeManager themeManager;
 
   const CustomCard({
     super.key,
     required this.course,
-    required this.backgroundColor,
+    required this.themeManager, required Color backgroundColor,
   });
 
   @override
@@ -33,7 +34,7 @@ class CustomCard extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15), // закругляем углы
           child: Container(
-            color: backgroundColor,
+            color: themeManager.cardBackgroundColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -48,10 +49,10 @@ class CustomCard extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     course.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black, // цвет текста
+                      color: themeManager.textColor, // цвет текста
                     ),
                   ),
                 ),
@@ -59,8 +60,8 @@ class CustomCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     course.description,
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0), // цвет текста
+                    style: TextStyle(
+                      color: themeManager.textColor, // цвет текста
                     ),
                   ),
                 ),
@@ -72,14 +73,14 @@ class CustomCard extends StatelessWidget {
                     children: [
                       Text(
                         'Занятия: ${course.lessons}',
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0), // цвет текста
+                        style: TextStyle(
+                          color: themeManager.textColor, // цвет текста
                         ),
                       ),
                       Text(
                         'Цена: ${course.price}',
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0), // цвет текста
+                        style: TextStyle(
+                          color: themeManager.textColor, // цвет текста
                         ),
                       ),
                     ],
@@ -93,14 +94,14 @@ class CustomCard extends StatelessWidget {
                     children: [
                       Text(
                         'Бесплатно: ${course.isFree ? "Да" : "Нет"}',
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0), // цвет текста
+                        style: TextStyle(
+                          color: themeManager.textColor, // цвет текста
                         ),
                       ),
                       Text(
                         'Тег${course.tags.join(", ")}',
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0), // цвет текста
+                        style: TextStyle(
+                          color: themeManager.textColor, // цвет текста
                         ),
                       ),
                     ],

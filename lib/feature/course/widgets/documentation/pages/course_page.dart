@@ -87,7 +87,7 @@ class _CoursePageState extends State<CoursePage> {
             answer: 'bool',
           ),
         ],
-        videoUrl: 'https://youtu.be/dQw4w9WgXcQ',
+        videoUrl: 'https://youtu.be/GuJNK_8vp-E?si=BGkblZKOHdlQhcwI',
       ),
       CourseTopic(
         title: 'Модуль 3: Функции и Методы',
@@ -108,7 +108,7 @@ class _CoursePageState extends State<CoursePage> {
             answer: 'Функция внутри класса',
           ),
         ],
-        videoUrl: 'https://youtu.be/oHg5SJYRHA0',
+        videoUrl: 'https://youtu.be/LefACE-tCrA?si=wnk8Rc9cotpZgQ4-',
       ),
       CourseTopic(
         title: 'Модуль 4: Операторы',
@@ -384,7 +384,7 @@ class TopicTabs extends StatelessWidget {
           foregroundColor: Colors.black,
         ),
         body: Container(
-          color: Colors.white,
+          color: Color.fromARGB(255, 248, 248, 248),
           child: TabBarView(
             children: [
               TheoryTab(topic: topic),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/feature/chat/chat.dart';
+import 'package:myapp/feature/profile/model/user_profile.dart';
 import 'package:myapp/feature/profile/profile.dart';
 import 'package:myapp/feature/search/search_scree.dart';
 import 'package:myapp/feature/story/story_widget.dart';
@@ -33,8 +34,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String selectedTag = '';
 
   final List<Map<String, String>> stories = [
-    {'type': 'image', 'url': 'https://i.pinimg.com/564x/e6/0d/a3/e60da318b135e5130c1d45e7789767af.jpg'},
-    {'type': 'image', 'url': 'https://i.pinimg.com/564x/f9/47/bf/f947bfbb294cff3ab27d78b0c059870d.jpg'},
+    {'type': 'image', 'url': 'https://instagram.fkiv6-1.fna.fbcdn.net/v/t51.29350-15/432605782_1127286481618418_7670954581089740010_n.webp?stp=dst-jpg_e35_p720x720&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xMDI0eDEyODAuc2RyLmYyOTM1MCJ9&_nc_ht=instagram.fkiv6-1.fna.fbcdn.net&_nc_cat=102&_nc_ohc=7JdXGyAtX0cQ7kNvgEsfgwf&edm=AEhyXUkBAAAA&ccb=7-5&ig_cache_key=MzMyNDI1NDI1MDAyMjkwMjQ5OA%3D%3D.2-ccb7-5&oh=00_AYAMzexpuY0bF5acceLEZXNiogL49ykDzYW__MzRDeth-A&oe=667E520E&_nc_sid=cf751b'},
+    {'type': 'image', 'url': 'https://instagram.fkiv6-1.fna.fbcdn.net/v/t51.29350-15/433246134_330118776705552_6933012169086874151_n.webp?stp=dst-jpg_e35&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xMDI0eDEyODAuc2RyLmYyOTM1MCJ9&_nc_ht=instagram.fkiv6-1.fna.fbcdn.net&_nc_cat=100&_nc_ohc=LeQXdVjWaekQ7kNvgGRXurD&edm=AEhyXUkBAAAA&ccb=7-5&ig_cache_key=MzMyNDI1NDI0OTc3MTMxMjUxMA%3D%3D.2-ccb7-5&oh=00_AYBbnyOHMIhJFYtL1hylFj5KhlbP6vH3DODG7MiNctDPbA&oe=667E5A27&_nc_sid=cf751b'},
     {'type': 'image', 'url': 'https://i.pinimg.com/564x/f7/4e/0b/f74e0bd73320281938ec3ea61738c376.jpg'},
     {'type': 'gif', 'url': 'https://i.pinimg.com/originals/0f/b9/4d/0fb94dff52a5935e105ec497a0c010a5.gif'}
   ];
@@ -221,6 +222,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             .expand((course) => course.tags)
                             .toSet()
                             .toList(),
+                        themeManager: _themeManager, // Pass the ThemeManager here
                       ),
                     ),
                   ),
@@ -301,7 +303,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       courseCost: 0.0,
                                       tags: course.tags,
                                     ),
-                                    backgroundColor: _themeManager.cardBackgroundColor,
+                                    backgroundColor: _themeManager.cardBackgroundColor, 
+                                    themeManager: _themeManager, // Pass the themeManager object here
                                   );
                                 },
                               ),
@@ -320,62 +323,60 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: BottomAppBar(
-              color: _themeManager.backgroundColor, // Set background color dynamically
-            child: Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    IconButton(
-      icon: const Icon(Icons.home),
-      onPressed: () {
-        // Navigate to HomeScreen (replace with your actual HomeScreen class)
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-      },
-    ),
-    IconButton(
-      icon: const Icon(Icons.search),
-      onPressed: () {
-        // Navigate to SearchScreen (replace with your actual SearchScreen class)
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const SearchScreen()),
-        );
-      },
-    ),
-    IconButton(
-      icon: const Icon(Icons.favorite),
-      onPressed: () {
-        // Navigate to FavoritesScreen (replace with your actual FavoritesScreen class)
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const FavoritesScreen()),
-        );
-      },
-    ),
-    IconButton(
-      icon: const Icon(Icons.chat),
-      onPressed: () {
-        // Navigate to ChatScreen (replace with your actual ChatScreen class)
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ChatScreen(user: {},)),
-        );
-      },
-    ),
-   IconButton(
-  icon: const Icon(Icons.person),
-  onPressed: () {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => ProfileScreen(userProfile: userProfile)),
-    // );
-  },
-),
-  ],
-),
+              color: _themeManager.backgroundColor, 
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.home),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SearchScreen()),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.favorite),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.chat),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>   ChatScreen(user: {},)),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.person),
+                    onPressed: () {
+                    Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => ProfileScreen(userProfile: UserProfile.empty()),
+  ),
+);
 
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         );

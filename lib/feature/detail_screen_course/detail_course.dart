@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/core/data/model/course/course.dart';
 import 'package:myapp/core/utils/local_storage_service.dart';
 import 'package:myapp/feature/course/widgets/documentation/pages/course_page.dart';
-import 'package:myapp/feature/favorite/favorite_screen.dart';
 import 'package:myapp/feature/payment/payment.dart';
 
 class CourseDetailScreen extends StatefulWidget {
@@ -18,8 +17,7 @@ class CourseDetailScreen extends StatefulWidget {
   _CourseDetailScreenState createState() => _CourseDetailScreenState();
 }
 
-class _CourseDetailScreenState extends State<CourseDetailScreen>
-    with SingleTickerProviderStateMixin {
+class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Course _course;
   bool _isFavorite = false;
@@ -61,17 +59,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
         iconTheme: const IconThemeData(color: Colors.black),
         foregroundColor: Colors.black,
         title: Text(_course.name, style: const TextStyle(color: Colors.black)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const FavoritesScreen()),
-              );
-            },
-          ),
-        ],
       ),
       body: Container(
         color: Colors.white,
@@ -303,7 +290,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
   }
 
   Widget _buildReviewsSection() {
-    List<String> names = ['Alice', 'Bob', 'Charlie'];
+    List<String> names = ['Андрей', 'Петя', 'Вася'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -335,7 +322,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
             width: 200,
             margin: const EdgeInsets.symmetric(horizontal: 8.0),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255),
+              color: const Color.fromARGB(255, 0, 0, 0),
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: Padding(
@@ -346,13 +333,13 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
                   Container(
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.grey,
+                      color: Color.fromARGB(255, 5, 5, 5),
                     ),
                     child: const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        'AR',
-                        style: TextStyle(color: Colors.white),
+                        'Уеник',
+                        style: TextStyle(color: Color.fromARGB(255, 222, 222, 222)),
                       ),
                     ),
                   ),
@@ -407,7 +394,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.black,
-            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+            backgroundColor: const Color.fromARGB(184, 255, 255, 255),
             side: const BorderSide(color: Colors.black),
           ),
           child: const Text('Отправить'),

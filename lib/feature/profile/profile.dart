@@ -17,23 +17,23 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppLightColors.background, // Изменен фон
+      backgroundColor: AppLightColors.background,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppLightColors.button), // Изменен цвет иконки
+          icon: const Icon(Icons.arrow_back, color: AppLightColors.button),
           onPressed: () {
             context.go(SkillWaveRouter.dashboard);
           },
         ),
         title: const Text(
           'Профиль',
-          style: TextStyle(color: AppLightColors.button), // Изменен цвет текста
+          style: TextStyle(color: AppLightColors.button),
         ),
-        backgroundColor: AppLightColors.background, // Изменен цвет фона
+        backgroundColor: AppLightColors.background,
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout, color: AppLightColors.button), // Изменен цвет иконки
+            icon: const Icon(Icons.logout, color: AppLightColors.button),
             onPressed: () {
               context.go(SkillWaveRouter.onboarding);
             },
@@ -49,8 +49,7 @@ class ProfileScreen extends StatelessWidget {
               radius: 60,
               backgroundImage: userProfile.photoUrl.isNotEmpty
                   ? FileImage(File(userProfile.photoUrl))
-                  : const AssetImage('assets/default_avatar.png')
-                      as ImageProvider,
+                  : const AssetImage('assets/default_avatar.png') as ImageProvider,
               backgroundColor: Colors.grey[200],
             ),
             const SizedBox(height: 16),
@@ -59,7 +58,7 @@ class ProfileScreen extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: AppLightColors.button, // Изменен цвет текста
+                color: AppLightColors.button,
               ),
               textAlign: TextAlign.center,
             ),
@@ -67,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
               userProfile.email,
               style: const TextStyle(
                 fontSize: 16,
-                color: AppLightColors.tagText, // Изменен цвет текста
+                color: Color.fromARGB(255, 154, 241, 25),
               ),
               textAlign: TextAlign.center,
             ),

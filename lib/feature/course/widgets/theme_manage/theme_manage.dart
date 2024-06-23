@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-
 class ThemeManager {
-  ValueNotifier<bool> _isDarkMode = ValueNotifier(false);
+  late ValueNotifier<bool> _isDarkMode;
+
+  ThemeManager() {
+    _isDarkMode = ValueNotifier(false);
+  }
 
   ValueNotifier<bool> get isDarkModeNotifier => _isDarkMode;
 
+  bool get isDarkMode => _isDarkMode.value;
+
   ThemeData get themeData => _isDarkMode.value ? darkTheme : lightTheme;
 
-  Color get backgroundColor =>
-      _isDarkMode.value ? const Color.fromARGB(255, 0, 0, 0) : const Color.fromARGB(255, 250, 249, 249);
+  Color get backgroundColor => _isDarkMode.value ? const Color.fromARGB(255, 0, 0, 0) : const Color.fromARGB(255, 250, 249, 249);
 
   Color get textColor => _isDarkMode.value ? Colors.white : Colors.black;
 
-  Color get cardBackgroundColor =>
-      _isDarkMode.value ? const Color.fromARGB(255, 0, 0, 0) : const Color.fromARGB(255, 255, 255, 255);
+  Color get cardBackgroundColor => _isDarkMode.value ? const Color.fromARGB(255, 0, 0, 0) : const Color.fromARGB(255, 255, 255, 255);
 
   void toggleTheme() {
     _isDarkMode.value = !_isDarkMode.value;

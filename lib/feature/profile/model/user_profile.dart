@@ -8,4 +8,12 @@ class UserProfile {
     required this.email,
     required this.photoUrl,
   });
+
+  factory UserProfile.empty() {
+    return UserProfile(
+      displayName: '',
+      email: '',
+      photoUrl: '',
+    );
+  }
 }

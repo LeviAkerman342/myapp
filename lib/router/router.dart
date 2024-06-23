@@ -13,7 +13,7 @@ import 'package:myapp/router/domain/model_router.dart';
 
 import '../core/data/model/api/api_service.dart';
 
-final authenticationRepository = AuthenticationRepository(); 
+final authenticationRepository = AuthenticationRepository();
 
 final router = GoRouter(
   initialLocation: SkillWaveRouter.onboarding,

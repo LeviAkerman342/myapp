@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/feature/course/widgets/theme_manage/theme_manage.dart';
 
 class TegsEducation extends StatefulWidget {
   final Color textColor;
   final List<String> tags;
   final Function(String) onTagTap;
+  final ThemeManager themeManager; 
 
   const TegsEducation({
     Key? key,
     required this.textColor,
     required this.tags,
     required this.onTagTap,
+    required this.themeManager, 
   }) : super(key: key);
 
   @override
@@ -57,17 +60,17 @@ class _TegsEducationState extends State<TegsEducation> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          border: Border.all(color: const Color.fromARGB(255, 99, 99, 99), width: 2), // Gray border
+          border: Border.all(color: widget.themeManager.isDarkMode ? Colors.white : const Color.fromARGB(255, 99, 99, 99), width: 2), // Dynamic border color
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
             if (hoverStates[index])
-              const BoxShadow(
-                color: Colors.black,
+              BoxShadow(
+                color: widget.themeManager.isDarkMode ? Colors.white : Colors.black,
                 blurRadius: 20,
                 spreadRadius: -5,
               ),
           ],
-          color: Colors.white, // Background color
+          color: widget.themeManager.isDarkMode ? Colors.black : Colors.white, // Dynamic background color
         ),
         child: AnimatedOpacity(
           duration: const Duration(milliseconds: 200),

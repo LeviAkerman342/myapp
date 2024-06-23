@@ -54,7 +54,7 @@ class _TestTabState extends State<TestTab> {
                   }).toList(),
                   if (_selectedAnswers[index] != null)
                     Text(
-                      _isCorrect[index] == true ? 'Correct!' : 'Incorrect!',
+                      _isCorrect[index] == true ? 'Правильно!' : 'Не правильно!',
                       style: TextStyle(
                         color: _isCorrect[index] == true
                             ? Colors.green
